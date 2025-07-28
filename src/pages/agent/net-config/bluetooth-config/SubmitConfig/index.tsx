@@ -1,13 +1,12 @@
 /* eslint-disable no-bitwise */
 import React, { useCallback, useEffect, useState, useRef } from 'react'
-import { View, navigateTo, redirectTo } from 'remax/one'
+import { View, navigateTo, switchTab } from 'remax/one'
 import { routeMap, Pages } from '@/constants/route'
 import store from '@/stores'
 
 import { useBluetoothConfigContext } from '../context'
 import { bluetoothService, connectBluetoothDevice } from '../bluetooth'
 import styles from './index.less'
-import { useToast } from '@/utils/toast'
 
 // 数据帧类型
 const BLUFI_TYPE_SSID = (0x02 << 2) | 0x01
@@ -257,7 +256,7 @@ export default function SubmitConfig() {
       {!isSubmitting && result && result.success && (
         <>
           <View className={styles.header}>🎉️ 配网成功！</View>
-          <View className={styles.text}>📶 {selectedWifi?.SSID} 已成功连接到 {selectedWifi?.SSID}</View>
+          <View className={styles.text}>📶 已成功连接到 {selectedWifi?.SSID}</View>
           <View
             className={styles.actionBtn}
             onTap={() => {
@@ -266,16 +265,13 @@ export default function SubmitConfig() {
               const manageAgentUrl = routeMap[Pages.XrobotManageAgent] // 智能体管理页面路由
 
               // 步骤1：用智能体管理页面替换当前配网页面（清除中间所有路由）
-              redirectTo({
-                url: manageAgentUrl
-              }).then(() => {
-                // 步骤2：从智能体管理页面跳转到设备管理页面（保持路由栈纯净）
-                setTimeout(() => {
-                  navigateTo({
-                    url: deviceManageUrl
-                  })
-                }, 100) // 延迟确保第一步跳转完成
-              })
+              switchTab({ url: manageAgentUrl })
+              // 步骤2：从智能体管理页面跳转到设备管理页面（保持路由栈纯净）
+              setTimeout(() => {
+                navigateTo({
+                  url: deviceManageUrl
+                })
+              }, 100) // 延迟确保第一步跳转完成
             }}
           >
             🔄 返回设备管理页面
