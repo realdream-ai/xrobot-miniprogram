@@ -190,7 +190,7 @@ export default function SubmitConfig() {
     }
 
     // 监听蓝牙连接状态
-    wx.onBLEConnectionStateChange(function(res) {
+    wx.onBLEConnectionStateChange(res => {
       if (!res.connected && !result) {
         console.log('蓝牙连接断开，重新连接')
         connectBluetoothDevice(selectedDevice.deviceId).then(() => {

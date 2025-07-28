@@ -18,7 +18,7 @@ import styles from './style.less'
 export type Props = {
   tip: string
   icon?: 'loading' | 'success' | 'warning' | 'fail' | 'none'
-  duration?: number
+  duration?: number // eslint-disable-line
   coverTopNav?: boolean
   className?: string
 }

@@ -17,7 +17,7 @@
     "dev:develop": "cross-env NODE_ENV=development remax build -w -m -t",
     "build": "cross-env NODE_ENV=production remax build -m -t",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit && eslint --ignore-path .gitignore --ext .ts,.tsx ./",
+    "lint": "eslint --ignore-path .gitignore --ext .ts,.tsx ./",
     "travis:script": "npm run lint",
     "travis:before-script": "yarn"
   },
@@ -40,6 +40,7 @@
     "wxmp-rsa": "^2.1.0"
   },
   "devDependencies": {
+    "@qiniu/eslint-config": "0.0.4",
     "@svgr/webpack": "^5.4.0",
     "@types/classnames": "^2.2.10",
     "@types/lodash": "^4.14.168",

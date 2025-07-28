@@ -138,7 +138,7 @@ export default observer(function SubmitConfig() {
               // 步骤2：从智能体管理页面跳转到设备管理页面（保持路由栈纯净）
               setTimeout(() => {
                 navigateTo({
-                    url: deviceManageUrl
+                  url: deviceManageUrl
                 })
               }, 100) // 延迟确保第一步跳转完成
             }}

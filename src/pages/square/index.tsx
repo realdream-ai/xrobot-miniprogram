@@ -17,10 +17,10 @@ import { Template } from './types'
 import './index.less'
 
 function fetchAllTemplates(callback: (data: { template: Template[] },) => void, failcallback: (res: any) => void) {
-  console.log("fetchAllTemplates")
-  fetch("https://xrobot-storage.qnaigc.com/xrobot-mp/agent-square-template.json",)
-    .then((res) => { callback(res) })
-    .catch((res) => { failcallback(res) })
+  console.log('fetchAllTemplates')
+  fetch('https://xrobot-storage.qnaigc.com/xrobot-mp/agent-square-template.json')
+    .then(res => { callback(res) })
+    .catch(res => { failcallback(res) })
 }
 
 export default function Square() {
@@ -33,12 +33,12 @@ export default function Square() {
     if (isLoading) return
     setIsLoading(true)
 
-    fetchAllTemplates((res) => {
+    fetchAllTemplates(res => {
       setTemplates(res.template)
       setIsLoading(false)
-    }, (res) => {
-      console.error("获取模板失败：", res)
-      showToast({ title: "获取模板失败", icon: "error", duration: 2000 })
+    }, res => {
+      console.error('获取模板失败：', res)
+      showToast({ title: '获取模板失败', icon: 'error', duration: 2000 })
     })
   }
 
