@@ -1,0 +1,34 @@
+@import "~@/utils/styles/index.less";
+
+.tag-filter {
+  padding: 0 16px 16px;
+  white-space: nowrap;
+}
+
+.tag-list {
+  display: flex;
+  gap: 12px;
+  padding-right: 16px;
+}
+
+.tag-item {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: @grey-2;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.tag-active {
+  background: @primary-color;
+}
+
+.tag-text {
+  font-size: 14px;
+  color: @grey-6;
+  white-space: nowrap;
+}
+
+.tag-text-active {
+  color: @white;
+}

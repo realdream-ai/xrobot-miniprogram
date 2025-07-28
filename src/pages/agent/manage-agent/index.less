@@ -1,0 +1,98 @@
+@import "~@/utils/styles/index.less";
+
+.col-container {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 文字样式 */
+.alert-text {
+  width: 90%;
+  max-width: 600rpx;
+  text-align: center;
+  color: #333333;
+  margin-bottom: 20rpx;
+  font-size: 16px;
+  line-height: 1.5;
+
+  /* 粗体文字 */
+  &__bold {
+    font-size: 20px;
+    font-weight: 700;
+  }
+}
+
+.agentPage {
+  height: full;
+  background: @grey-2;
+  padding: 16px 16px 16px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+
+  &__content {
+    flex: 1;
+    margin: 16px 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    color: #606266;
+    font-size: 15px;
+  }
+
+  &__footer {
+    // position: fixed;
+    // bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100rpx;
+    background: @white;
+    // border-top: 2rpx solid #e4e7ed;
+    padding: 0 20rpx;
+    box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+}
+
+.footerButton {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: 0 12px;
+  background: @primary-color;
+  color: @white;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  border: none;
+  text-align: center;
+
+  &[mode="primary"] {
+    background: linear-gradient(135deg, @primary-color, #a966ff);
+  }
+
+  &[mode="default"] {
+    background: #e6ebff;
+    color: @primary-color;
+    border: 1px solid #adbdff;
+  }
+
+  // &:hover {
+  //   opacity: 0.9;
+  // }
+}
+
+.empty-text {
+  text-align: center;
+  color: #909399;
+  font-size: 36px;
+  // padding: 10px;
+  margin: auto;
+}

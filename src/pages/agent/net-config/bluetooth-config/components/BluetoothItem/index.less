@@ -1,0 +1,53 @@
+@import '~@/pages/common/style.less';
+
+.bluetoothItem {
+  padding: 24rpx;
+  background: white;
+  border: 2rpx solid @grey-3;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  transition: all 0.2s;
+
+  &:active {
+    background: @grey-2;
+  }
+
+  .deviceIcon {
+    font-size: 40rpx;
+    color: #1890ff;
+  }
+
+  .content {
+    flex: 1;
+  }
+
+  .name {
+    .font-content();
+    font-weight: 500;
+  }
+
+  .deviceId {
+    margin-top: 4rpx;
+    .font-tip();
+    color: @grey-6;
+  }
+
+  .signalStrength {
+    margin-top: 8rpx;
+    .font-tip();
+    display: flex;
+    align-items: center;
+    gap: 16rpx;
+  }
+
+  .selectIcon {
+    color: #1890ff;
+    font-size: 28rpx;
+    padding: 8rpx 16rpx;
+    border: 2rpx solid #1890ff;
+    border-radius: 24rpx;
+  }
+} 

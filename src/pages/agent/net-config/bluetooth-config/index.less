@@ -1,0 +1,107 @@
+@import '~@/pages/common/style.less';
+
+page {
+  background: @background-color;
+}
+
+.container {
+  padding: 32rpx 32rpx 60rpx;
+}
+
+.stepTitle {
+  .font-title();
+  margin-bottom: 32rpx;
+
+  &::before {
+    content: '📋 ';
+  }
+}
+
+.actionBtn {
+  margin: 40rpx 0;
+  background: @blue;
+  border-radius: 16rpx;
+  height: 88rpx;
+  text-align: center;
+  line-height: 88rpx;
+  .font-btn();
+}
+
+.empty {
+  width: 100%;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  .font-tip();
+
+  .loadingIcon {
+    width: 64rpx;
+    height: 64rpx;
+    animation: rotate 1s infinite linear;
+    transform-origin: center;
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
+
+.tips {
+  width: 100%;
+  padding: 0 8rpx;
+  line-height: 2;
+
+  .tip::before {
+    content: '• ';
+  }
+}
+
+.tip {
+  .font-tip();
+}
+
+.wifiList {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+
+  .summary {
+    .font-tip();
+  }
+}
+
+.form {
+  .item {
+    margin-bottom: 32rpx;
+
+    .label {
+      font-size: 32rpx;
+      font-weight: 500;
+      margin-bottom: 12rpx;
+
+      &.required::after {
+        content: '*';
+        color: @danger-color;
+        margin-left: 8rpx;
+      }
+    }
+
+    .input {
+      height: 80rpx;
+      border: 1rpx solid @grey-5;
+      border-radius: 8rpx;
+
+      &.error {
+        border: 1rpx solid @danger-color;
+      }
+    }
+  }
+}

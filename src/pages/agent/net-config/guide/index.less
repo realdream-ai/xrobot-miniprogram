@@ -1,0 +1,70 @@
+@import '~@/pages/common/style.less';
+
+page {
+  background: @background-color;
+}
+
+.steps {
+  padding: 32rpx;
+
+  .header {
+    .font-title();
+    margin-bottom: 40rpx;
+    //border-bottom: 2rpx solid #f0f0f0;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 40rpx;
+    padding-left: 4rpx;
+    //position: relative;
+
+    //&:not(:last-child)::after {
+    //  content: '';
+    //  position: absolute;
+    //  left: 25rpx;
+    //  top: 60rpx;
+    //  width: 2rpx;
+    //  height: calc(100% - 72rpx);
+    //  background: linear-gradient(to bottom, #667eea, #764ba2);
+    //}
+
+    .number {
+      flex-shrink: 0;
+      width: 36rpx;
+      height: 36rpx;
+      margin-right: 16rpx;
+      border-radius: 50%;
+      background: @blue;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24rpx;
+      line-height: 1;
+      color: white;
+      font-weight: bold;
+    }
+
+    .content {
+      flex: 1;
+
+      .title {
+        .font-title();
+        line-height: 1;
+        margin-bottom: 16rpx;
+      }
+
+      .notes {
+        .font-content();
+        line-height: 1.8;
+
+        .note {
+          &::before {
+            content: '• ';
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+@import "~@/utils/styles/index.less";
+
+.upload-page {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.train-title {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.voice-name {
+  font-size: 16px;
+  color: @grey-7;
+  margin-bottom: 18px;
+  text-align: center;
+}
+.choose-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px; /* 行间距12px，列间距16px */
+  margin-bottom: 12px;
+  justify-content: flex-start;
+}
+.choose-btns button,
+.choose-btns .ant-btn,
+.choose-btns .remax-wechat-button {
+  flex: 1 1 calc(50% - 8px); /* 两列，减去gap一半 */
+  min-width: 120px;
+  max-width: 100%;
+  white-space: nowrap;
+  margin: 0;
+}
+.file-info {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  color: #222;
+}
+.tip {
+  color: #f5a623;
+  font-size: 14px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+.upload-btn {
+  background-color: @primary-color;
+  color: #fff;
+  margin-top: 12px;
+  font-size: 16px;
+  height: 44px;
+  border-radius: 8px;
+}
+.voice-upload-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 24px 0;
+  border: 1px solid #dcdfe6;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+.voice-upload-card__header {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3d4566;
+  margin-bottom: 12px;
+}
+.voice-upload-card__content {
+  margin-bottom: 16px;
+}
+.voice-upload-card__actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.upload-btn {
+  min-width: 120px;
+  font-size: 15px;
+  border-radius: 8px;
+}
+.file-info {
+  background: #f7f8fa;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #222;
+  word-break: break-all;
+  white-space: normal;
+}
+.choose-btns {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.tip {
+  color: #f5a623;
+  font-size: 13px;
+  margin-bottom: 8px;
+}

@@ -1,0 +1,29 @@
+@import '~@/utils/styles/index.less';
+
+.container {
+  overflow: hidden;
+  height: 12rpx;
+  width: 160rpx;
+  background-color: @grey-4;
+  opacity: 0.9;
+  position: relative;
+
+  .strength {
+    height: 100%;
+  }
+
+  .cover {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: transparent;
+    display: flex;
+    justify-content: space-evenly;
+
+    .separator {
+      height: 100%;
+      width: 4rpx;
+      background: white;
+    }
+  }
+} 

@@ -1,0 +1,109 @@
+@import '../index.less';
+@import '~@/pages/common/style.less';
+
+.form {
+  padding: 48rpx 48rpx 60rpx;
+}
+
+.container {
+  padding: 24px;
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.tips {
+  margin-bottom: 24px;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.wifiList {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.empty {
+  padding: 32px 0;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.actionBtn {
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  background: #1890ff;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 12px;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.form {
+  padding: 32rpx;
+
+  .item {
+    margin-bottom: 32rpx;
+
+    .label {
+      .font-content();
+      margin-bottom: 16rpx;
+
+      &.required::before {
+        content: '*';
+        color: #ff4d4f;
+        margin-right: 8rpx;
+      }
+    }
+
+    .input {
+      height: 88rpx;
+      line-height: 88rpx;
+      padding: 0 24rpx;
+      border: 2rpx solid @grey-3;
+      border-radius: 8rpx;
+
+      &.error {
+        border-color: #ff4d4f;
+      }
+    }
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

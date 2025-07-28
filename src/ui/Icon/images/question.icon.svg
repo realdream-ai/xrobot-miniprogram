@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>常见问题</title>
+    <g id="充值" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="财务中心" transform="translate(-108.000000, -114.000000)">
+            <g id="常见问题" transform="translate(108.000000, 114.000000)">
+                <rect id="矩形" fill="#BFBFBF" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <circle id="椭圆形" stroke="#BFBFBF" cx="8" cy="8" r="6"></circle>
+                <g id="编组-3" transform="translate(6.530000, 5.444444)">
+                    <g id="编组-6" transform="translate(0.000000, 0.000000)">
+                        <path d="M1.4376,4 L1.44,2.88 C2.23529004,2.88 2.88,2.23529004 2.88,1.44 C2.88,0.64470996 2.23529004,0 1.44,0 C0.64470996,0 5.12923037e-14,0.64470996 5.12923037e-14,1.44" id="路径" stroke="#BFBFBF"></path>
+                        <line x1="1.43666667" y1="4.33333333" x2="1.43666667" y2="5" id="路径-9" stroke="#2F3C41" stroke-linejoin="round"></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

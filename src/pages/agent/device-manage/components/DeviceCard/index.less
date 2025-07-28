@@ -1,0 +1,73 @@
+.device-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.device-card.selected {
+  border: 2rpx solid #5f70f3;
+  background: rgba(95, 112, 243, 0.1);
+}
+
+.device-info {
+  flex: 1;
+}
+
+.device-info text {
+  display: block;
+  font-size: 28rpx;
+  color: #2c3e50;
+  margin-bottom: 10rpx;
+}
+
+.device-actions {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 120rpx; /* 确保垂直均匀分布 */
+  gap: 10rpx;
+}
+
+.action-button {
+  width: 120rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  font-size: 26rpx;
+  border-radius: 8rpx;
+  border: none;
+  text-align: center;
+}
+
+.action-button.detail {
+  background: #5f70f3;
+  color: #fff;
+}
+
+.action-button.unbind {
+  background: #fd5b63;
+  color: #fff;
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border: 2rpx solid #cccccc;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  color: #5f70f3;
+}

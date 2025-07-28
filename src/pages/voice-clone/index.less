@@ -1,0 +1,203 @@
+@import "~@/utils/styles/index.less";
+
+.create-btn-wrapper {
+  margin: 0 8px 24px 8px;
+  text-align: right;
+}
+
+.create-btn {
+  background-color: @primary-color;
+  color: #fff;
+  width: 200px;
+  height: 40px;
+  font-size: 16px;
+  padding-bottom: 20px;
+}
+
+.voice-list {
+  margin: 0 0 24px 0;
+  padding: 0 8px;
+}
+
+.voice-card {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.voice-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: @grey-7;
+}
+
+.voice-state {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.voice-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.empty {
+  text-align: center;
+  color: #bbb;
+  margin-top: 48px;
+  font-size: 16px;
+}
+
+.edit-modal-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 20px 16px 20px;
+  min-width: 260px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.edit-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.edit-modal-input {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 16px;
+  margin-bottom: 18px;
+  outline: none;
+}
+.edit-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.voice-card-vertical {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 18px;
+  padding: 16px 16px 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.voice-row {
+  display: flex;
+  align-items: center;
+  min-height: 28px;
+  font-size: 15px;
+}
+.voice-row-top {
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+.voice-name-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.name-text {
+  font-size: 18px;
+  font-weight: 600;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.edit-icon {
+  font-size: 16px;
+  color: #409eff;
+  cursor: pointer;
+}
+.voice-status-badge {
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  margin-left: 8px;
+}
+.voice-status-badge.pending {
+  background: #f5a623;
+}
+.voice-status-badge.success {
+  background: #13ce66;
+}
+.voice-status-badge.training {
+  background: #409eff;
+}
+.voice-status-badge.failed {
+  background: #ff4949;
+}
+.info-label {
+  font-size: 13px;
+  color: #888;
+  margin-right: 4px;
+  min-width: 40px;
+}
+.info-value {
+  font-size: 15px;
+  color: @grey-7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+.info-value.disabled {
+  color: #bbb;
+}
+.info-value.clickable-audio {
+  color: #409eff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.voice-row-actions {
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 4px;
+}
+.clone-btn {
+  color: @primary-color;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+}
+.delete-btn {
+  background-color: #ff4d4f;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+}

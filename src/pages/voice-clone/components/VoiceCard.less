@@ -1,0 +1,103 @@
+@import "~@/utils/styles/index.less";
+
+.voice-card-agent {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #dcdfe6;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+.voice-card-agent__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.voice-card-agent__title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #3d4566;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.voice-card-agent__status {
+  font-size: 13px;
+  border-radius: 10px;
+  padding: 2px 10px;
+  margin-left: 8px;
+  color: #fff;
+  background: #bbb;
+}
+.voice-card-agent__status.pending {
+  background: #f5a623;
+}
+.voice-card-agent__status.success {
+  background: #13ce66;
+}
+.voice-card-agent__status.training {
+  background: #409eff;
+}
+.voice-card-agent__status.failed {
+  background: #ff4949;
+}
+.edit-icon {
+  font-size: 16px;
+  color: #409eff;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.voice-card-agent__content {
+  margin-bottom: 16px;
+}
+.voice-card-agent__infoItem {
+  font-size: 14px;
+  color: @grey-6;
+  margin-bottom: 8px;
+}
+.voice-card-agent__infoItem:last-child {
+  margin-bottom: 0;
+}
+.voice-card-agent__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.voice-card-agent__actionRow {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+.actionButton {
+  background-color: aliceblue;
+  flex: 1;
+  min-width: 0;
+  width: 25%;
+  padding: 0 4px;
+  font-size: 14px;
+}
+.deleteButton {
+  background-color: #ff4d4f !important;
+  color: #fff;
+}
+.cloneButton {
+  background-color: @primary-color;
+  color: #fff;
+}
+.info-value {
+  font-size: 14px;
+  color: @primary-color;
+  color: #fff;
+  cursor: pointer;
+  margin-left: 4px;
+}
+.info-value.disabled {
+  color: #bbb;
+  cursor: not-allowed;
+}
+.info-value.playing {
+  color: #13ce66;
+}

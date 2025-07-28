@@ -1,0 +1,68 @@
+@import "~@/utils/styles/index.less";
+
+.agentCard {
+  background: @white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #dcdfe6;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+
+  &__header {
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #3d4566;
+  }
+
+  &__content {
+    margin-bottom: 16px;
+  }
+
+  &__info {
+    &Item {
+      font-size: 14px;
+      color: @grey-6;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__actionRow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+  }
+}
+
+.actionButton {
+  flex: 1;
+  min-width: 0;
+  width: 25%;
+  padding: 0 4px;
+  font-size: 14px;
+}
+
+.deleteButton {
+  background-color: @danger-color !important;
+  border-color: @danger-color !important;
+
+  &:hover {
+    background-color: #ff7875 !important;
+    border-color: #ff7875 !important;
+  }
+} 

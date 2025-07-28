@@ -1,0 +1,119 @@
+@import '../index.less';
+@import '~@/pages/common/style.less';
+
+.form {
+  padding: 48rpx 48rpx 60rpx;
+}
+
+.container {
+  padding: 24px;
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.empty {
+  width: 100%;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+  .font-tip();
+
+  .loadingIcon {
+    width: 64rpx;
+    height: 64rpx;
+    animation: rotate 1s infinite linear;
+    transform-origin: center;
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  .loadingText {
+    .font-tip();
+  }
+}
+
+.tips {
+  width: 100%;
+  padding: 0 8rpx;
+  line-height: 2;
+  margin-bottom: 32rpx;
+}
+
+.tip {
+  .font-tip();
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .icon {
+    margin-right: 12rpx;
+  }
+}
+
+.deviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+
+  .summary {
+    .font-tip();
+  }
+}
+
+.actionBtn {
+  margin: 40rpx 0;
+  background: @blue;
+  border-radius: 16rpx;
+  height: 88rpx;
+  text-align: center;
+  line-height: 88rpx;
+  .font-btn();
+}
+
+.selectedDevice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  background: @grey-1;
+  border-radius: 16rpx;
+  margin-bottom: 32rpx;
+  .font-content();
+}
+
+.manualModal {
+  width: 640rpx;
+  border-radius: 32rpx;
+  padding: 48rpx;
+
+  .content {
+    margin-bottom: 48rpx;
+
+    .header {
+      .font-title();
+      margin-bottom: 32rpx;
+    }
+  }
+
+  .actionBtn {
+    margin: 32rpx 0;
+  }
+}

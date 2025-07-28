@@ -1,0 +1,24 @@
+@import "~@/utils/styles/index.less";
+
+.button {
+  text-align: center;
+  height: 88rpx;
+  border-radius: 8rpx;
+  line-height: 88rpx;
+  font-size: 32rpx;
+  
+  &:after {
+    border: none;
+  }
+    
+  &.default {
+    color: @grey-7;
+    background-color: #FFF;
+    border: 1rpx solid #BFBFBF;
+  }
+
+  &.primary {
+    color: #FFFFFF;
+    background-color: @primary-color;
+  }
+}

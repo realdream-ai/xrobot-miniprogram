@@ -1,0 +1,128 @@
+.device-detail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  box-sizing: border-box;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 2rpx solid #e4e7ed;
+}
+
+.title {
+  font-size: 36rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.detail-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #e4e7ed;
+}
+
+.label {
+  width: 200rpx;
+  font-size: 28rpx;
+  color: #606266;
+}
+
+.value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2c3e50;
+}
+
+.remark-view {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.edit-icon {
+  font-size: 28rpx;
+  color: #7079aa;
+}
+
+.edit-icon:hover {
+  color: #5a64b5;
+}
+
+.remark-edit {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+}
+
+.remark-input {
+  flex: 1;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 20rpx;
+  border: 2rpx solid #DCDFE6;
+  border-radius: 8rpx;
+  background: #fff;
+  font-size: 28rpx;
+}
+
+.remark-button {
+  width: 120rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  background: #5f70f3;
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  border: none;
+}
+
+.remark-button.cancel {
+  background: #909399;
+}
+
+.detail-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-top: 2rpx solid #e4e7ed;
+  padding: 0 20rpx;
+  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.footer-button {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  margin: 0 10rpx;
+  background: #5f70f3;
+  color: #fff;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  border: none;
+  text-align: center;
+}
+
+.footer-button.unbind {
+  background: #fd5b63;
+}

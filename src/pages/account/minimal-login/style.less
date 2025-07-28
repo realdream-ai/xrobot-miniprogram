@@ -1,0 +1,186 @@
+@import "~@/utils/styles/index.less";
+
+.entry, .signInForm {
+  text-align: center;
+  padding-top: 188rpx;
+  margin: 0 48rpx;
+}
+
+.accSelect {
+  height: 100%;
+  background: @grey-2;
+  padding: 48rpx;
+
+  .title {
+    font-weight: 500;
+    font-size: 32rpx;
+    line-height: 1.5;
+    color: @grey-7;
+  }
+
+  .subTitle {
+    margin-top: 24rpx;
+    font-size: 28rpx;
+    line-height: 1.5;
+    color: #BFBFBF;
+  }
+
+  .list {
+    margin-top: 32rpx;
+
+    .uidCard {
+      margin: 20rpx 0;
+      width: 100%;
+      background: #FFFFFF;
+      border-radius: 16rpx;
+      padding: 24rpx;
+      display: flex;
+      align-items: center;
+      gap: 24rpx;
+
+      .userIcon {
+        flex-shrink: 0;
+        width: 64rpx;
+        height: 64rpx;
+        border-radius: 50%;
+      }
+
+      .userInfo {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.5;
+
+        .userName {
+          font-size: 32rpx;
+          font-weight: 500;
+          color: @grey-7;
+        }
+
+        .accountId {
+          font-size: 24rpx;
+          color: @grey-4;
+          margin-top: 8rpx;
+        }
+      }
+
+      .identity {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        font-size: 24rpx;
+        line-height: 1.5;
+        padding: 0 12rpx;
+        background: @grey-3;
+        border-radius: 8rpx;
+      }
+    }
+  }
+}
+
+.entry {
+  height: 100%;
+  position: relative;
+
+  .phoneLoginBtn {
+    margin-top: 160rpx;
+    text-align: center;
+    height: 88rpx;
+    border-radius: 8rpx;
+    line-height: 88rpx;
+    font-size: 32rpx;
+    color: #FFFFFF;
+    background-color: @primary-color;
+
+    &:after {
+      border: none;
+    }
+  }
+
+  .accountLogin {
+    margin-top: 20rpx;
+    padding: 20rpx 0;
+    font-size: 28rpx;
+    color: @grey-5;
+  }
+
+  .agreement {
+    position: absolute;
+    bottom: 84rpx;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    line-height: 2;
+    color: @grey-5;
+
+    .link {
+      display: inline-block;
+      color: @blue-6;
+    }
+  }
+}
+
+.agreementModal {
+  width: 640rpx;
+  border-radius: 32rpx;
+
+  .content {
+    padding: 48rpx;
+    text-align: center;
+
+    .header {
+      color: #333;
+      font-size: 36rpx;
+      font-weight: 500;
+      line-height: 44rpx;
+      margin-bottom: 32rpx;
+    }
+
+    .tip {
+      font-size: 32rpx;
+
+      .link {
+        display: inline-block;
+        color: @blue-6;
+        padding: 0 12rpx;
+      }
+    }
+  }
+
+  .bottom {
+    height: 96rpx;
+    border-top: 1rpx solid #E8E8E8;
+    display: flex;
+
+    .btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32rpx;
+      color: #333;
+
+      &.primary {
+        color: #00AAE7;
+      }
+
+      .agreeAndLoginBtn {
+        margin: 0;
+        width: 100%;
+        background: none;
+        font-size: 32rpx;
+        color: #00AAE7;
+
+        &:after {
+          border: none;
+        }
+      }
+    }
+
+    .btn + .btn {
+      border-left: 1rpx solid #E8E8E8;
+    }
+  }
+}

@@ -1,0 +1,271 @@
+.config-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 88rpx 20rpx 20rpx 20rpx; /* 顶部留88rpx给AppBar */
+  background: rgba(237, 242, 255, 0.5);
+  border-radius: 30rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+}
+
+.hint-text {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: #979db1;
+  font-size: 24rpx;
+}
+
+.hint-text .info-icon {
+  font-size: 32rpx;
+}
+
+.btn {
+  padding: 16rpx 32rpx;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  text-align: center;
+  cursor: pointer;
+  width: 45%;
+}
+
+.btn-primary {
+  background: #5778ff;
+  color: white;
+}
+
+.btn-secondary {
+  background: #e6ebff;
+  color: #5778ff;
+  border: 2rpx solid #adbdff;
+}
+
+.divider {
+  height: 2rpx;
+  background: #e8f0ff;
+  margin: 20rpx 0;
+}
+
+.form-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20rpx 0;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  width: 100%;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #3d4566;
+  font-weight: 400;
+  line-height: 48rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #dcdfe6;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  background: white;
+  box-sizing: border-box;
+}
+
+.form-textarea {
+  width: 100%;
+  height: 240rpx;
+  border: 2rpx solid #dcdfe6;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  font-size: 30rpx;
+  background: white;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.memory-textarea {
+  height: 160rpx;
+}
+
+.textarea-container {
+  position: relative;
+  width: 100%;
+}
+
+.char-count {
+  position: absolute;
+  bottom: 12rpx;
+  right: 24rpx;
+  font-size: 26rpx;
+  color: #909399;
+}
+
+.template-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  width: 100%;
+}
+
+.template-item {
+  width: 160rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  background: #e6ebff;
+  border-radius: 16rpx;
+  font-size: 26rpx;
+  color: #5778ff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.template-item:hover {
+  background: #d0d8ff;
+}
+
+.template-loading {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.model-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.simple-select-container {
+  width: 100%;
+}
+
+.simple-select-container.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.simple-select {
+  width: 100%;
+}
+
+.select-trigger {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #dcdfe6;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+  background: white;
+  box-sizing: border-box;
+}
+
+.select-value {
+  font-size: 30rpx;
+  color: #606266;
+}
+
+.dropdown-arrow {
+  font-size: 28rpx;
+  color: #909399;
+}
+
+.function-icons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 12rpx 0;
+  width: 100%;
+}
+
+.icon-dot {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.edit-function-btn {
+  background: #e6ebff;
+  color: #5778ff;
+  border: 2rpx solid #adbdff;
+  border-radius: 36rpx;
+  padding: 16rpx 32rpx;
+  font-size: 28rpx;
+}
+
+.edit-function-btn.active-btn {
+  background: #5778ff;
+  color: white;
+}
+
+.edit-function-btn.disabled {
+  display: none !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chat-history-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  padding: 12rpx 0;
+  width: 100%;
+}
+
+.chat-history-options.disabled {
+  display: none !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio-option {
+  flex: 1;
+  padding: 16rpx 24rpx;
+  border: 2rpx solid #dcdfe6;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+  color: #606266;
+  text-align: center;
+  cursor: pointer;
+}
+
+.radio-option.selected {
+  border-color: #5778ff;
+  color: #5778ff;
+}
+
+.radio-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding-top: 20rpx;
+}
