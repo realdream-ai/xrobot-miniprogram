@@ -125,14 +125,14 @@ export default function ManageAgent() {
   }
 
   // 点击配置角色后跳转到角色配置页
-  function goToRoleConfig(agentId: string) {
+  const goToRoleConfig = (agentId: string) => {
     navigateTo({
       url: `${routeMap[Pages.XrobotRoleConfig]}?agentId=${agentId}`
     })
   }
 
   // 点击设备管理后跳转到设备配置页
-  function goToDeviceManage(agentId: string) {
+  const goToDeviceManage = (agentId: string) => {
     navigateTo({
       url: `${routeMap[Pages.XrobotDeviceManage]}?agentId=${agentId}`
     })

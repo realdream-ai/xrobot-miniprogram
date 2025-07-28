@@ -17,7 +17,7 @@ export default function TemplateDetail() {
   const [template, setTemplate] = useState<Template | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  const fetchTemplateDetail = async (id: string) => {
+  const fetchTemplateDetail = async (_id: string) => {
     try {
       setIsLoading(true)
       // todo 调用 API 获取模板详情
@@ -161,7 +161,6 @@ export default function TemplateDetail() {
         {/* 描述 */}
         <View className="detail-section">
           <Text className="section-title">描述</Text>
-          <Text></Text>
           <Text className="section-content">
             {template.systemPrompt || '暂无描述'}
           </Text>

@@ -37,7 +37,7 @@ export const nameMap = {
   [Pages.XrobotSquare]: '广场',
   [Pages.XrobotSquareTemplateDetail]: '模板详情',
   [Pages.XrobotAccManage]: '个人中心',
-  [Pages.XrobotDoc]: "操作指南",
+  [Pages.XrobotDoc]: '操作指南'
 }
 
 export const mainPackageUrlMap = {
@@ -75,5 +75,5 @@ export const routeMap = {
   [Pages.XrobotSquare]: '/pages/square/index',
   [Pages.XrobotSquareTemplateDetail]: '/pages/square/pages/template-detail/index',
   [Pages.XrobotAccManage]: '/pages/account/manage/index',
-  [Pages.XrobotDoc]: '/pages/doc/index',
+  [Pages.XrobotDoc]: '/pages/doc/index'
 }

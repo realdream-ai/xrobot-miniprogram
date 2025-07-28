@@ -103,8 +103,7 @@ export default function SelectWifi() {
     resolve:(value: WechatMiniprogram.WifiInfo[]) => void;
     reject: (reason: any) => void
   } | null>(null)
-  const currentTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null); // 修改类型
-
+  const currentTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null) // 修改类型
 
   // 在监听器中使用这些状态
   useEffect(() => {
@@ -181,7 +180,7 @@ export default function SelectWifi() {
     }
 
     // 监听蓝牙连接状态
-    wx.onBLEConnectionStateChange(function(res) {
+    wx.onBLEConnectionStateChange(res => {
       if (!res.connected) {
         console.log('蓝牙连接断开，重新连接')
         connectBluetoothDevice(selectedDevice.deviceId).then(() => {
