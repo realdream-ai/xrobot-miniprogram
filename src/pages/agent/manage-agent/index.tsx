@@ -173,12 +173,13 @@ export default function ManageAgent() {
           >
             创建智能体
           </Button>
-          <Button
+          {/* 小程序无法配置外部链接，所以暂时注释掉 */}
+          {/* <Button
             className={styles.footerButton}
             onTap={() => navigateTo({ url: routeMap[Pages.XrobotDoc] })}
           >
             {nameMap[Pages.XrobotDoc]}
-          </Button>
+          </Button> */}
         </View>
         <CreateAgentDialog
           open={createDialogVisible}
