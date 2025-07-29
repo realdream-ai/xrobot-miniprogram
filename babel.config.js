@@ -9,7 +9,7 @@ module.exports = {
           allowNamespaces: true
         },
         'class-properties': {
-          loose: true
+          loose: false
         },
         decorators: {
           legacy: true
