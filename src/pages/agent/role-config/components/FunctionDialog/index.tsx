@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { View, Button, Text } from 'remax/one'
-import { ConfigFunction, PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
+import { PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
 import ParamsInput from '../paramsInput'
 import './index.less'
 
@@ -8,7 +8,7 @@ interface Props {
   style?: any;
   all_functions: PorviderPluginFunction[];
   current_functions: PorviderPluginFunction[];
-  onSave: (updatedFunctions: ConfigFunction[]) => void;
+  onSave: (updatedFunctions: PorviderPluginFunction[]) => void;
   onCancel: () => void;
 }
 
@@ -44,12 +44,11 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
     const updatedFunctions = all_functions.filter(
       // 取出对应原始function
       func => selectedFunctionIds.some(id => (id === func.id))
-    ).map(func =>
       // 替换params
-      ({
-        ...func,
-        params: paramValues[func.id]
-      }))
+    ).map(func => ({
+      ...func,
+      params: paramValues[func.id]
+    }))
     onSave(updatedFunctions)
   }
 

@@ -28,8 +28,8 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
     return initialValues
   })
 
-  const onChangeCallback = useCallback((values: ParamInfo) => {
-    onChange(values)
+  const onChangeCallback = useCallback((_values: ParamInfo) => {
+    onChange(_values)
   }, [onChange])
 
   useEffect(() => {

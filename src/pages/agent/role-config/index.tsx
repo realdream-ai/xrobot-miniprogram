@@ -7,8 +7,8 @@ import AppBar from '@/components/AppBar'
 import BackLeading from '@/components/AppBar/BackLeading'
 import { nameMap, Pages } from '@/constants/route'
 import api from '@/apis/api'
-import { ConfigFunction, ModelItem, PluginId, PorviderPluginFunction } from '@/pages/common/types'
-import type { AgentTemplate, PluginFunctionForm } from '@/pages/agent/manage-agent/types'
+import { ConfigFunction, ModelItem, PorviderPluginFunction } from '@/pages/common/types'
+import type { AgentTemplate } from '@/pages/agent/manage-agent/types'
 import LoginRequired from '@/components/LoginRequired'
 
 import type {
@@ -209,13 +209,12 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
         //   : fetchAllFunctions();
 
         fetchAllFunctions(allFuncs => {
-          // console.log("allFunctions:", allFunctions)
           // 合并：按照 pluginId（id 字段）把全量元数据信息补齐
-          const _currentFunctions: PorviderPluginFunction[] = dataFunctions.map(mapping => {
+          const curFuncs: PorviderPluginFunction[] = dataFunctions.map(mapping => {
             const meta: PorviderPluginFunction | undefined = allFuncs.find(f => f.id === mapping.pluginId)
             if (!meta) {
               // 插件定义没找到，退化处理
-              return { id: mapping.pluginId, name: mapping.pluginId, params: {} }
+              return { id: mapping.pluginId, name: mapping.pluginId, params: {} } as PorviderPluginFunction
             }
             return {
               ...meta,
@@ -224,10 +223,9 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
               // 后端如果还有 paramInfo 字段就用 mapping.paramInfo，否则用 meta.params 默认值
               params: mapping.paramInfo || { ...meta.params },
               fieldsMeta: meta.fieldsMeta  // 保留以便对话框渲染 tooltip
-            }
+            } as PorviderPluginFunction
           })
-          console.log('setCurrentFunctions(_currentFunctions)', _currentFunctions)
-          setCurrentFunctions(_currentFunctions)
+          setCurrentFunctions(curFuncs)
 
           // // 备份原始，以备取消时恢复
           // setOriginalFunctions(JSON.parse(JSON.stringify(currentFunctions)));
