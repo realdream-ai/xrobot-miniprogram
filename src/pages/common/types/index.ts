@@ -66,17 +66,21 @@ export interface VoiceItem {
   name: string;
 }
 
+export type PluginId = string;
+
 // agent config 中的function字段元素
 export interface ConfigFunction {
   agentId: string;
   id: string;
-  pluginId: string;
-  paramInfo: any;
+  pluginId: PluginId;
+  paramInfo: ParamInfo;
 }
 
 export interface PorviderPluginFunction {
   id: string;
   fields: string;
+  fieldsMeta?: any;
+  params: any;
   modelType: string;
   name: string;
   providerCode: string;
@@ -97,6 +101,7 @@ export interface ParamInfo {
   api_key?: string;
   url?: string;
   default_location?: string;
+  [key:string]: any;
 }
 
 export interface Session {
