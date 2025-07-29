@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Button, Text } from 'remax/one';
-import { ConfigFunction, PorviderPluginFunction, ParamInfo } from '@/pages/common/types';
-import ParamsInput from '../paramsInput';
-import './index.less';
+import React, { useState, useCallback, useEffect } from 'react'
+import { View, Button, Text } from 'remax/one'
+import { ConfigFunction, PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
+import ParamsInput from '../paramsInput'
+import './index.less'
 
 interface Props {
   style?: any;
@@ -12,14 +12,13 @@ interface Props {
   onCancel: () => void;
 }
 
-// todo 
+// todo
 // 初始化 paramInfo
-// 实现onsave前的类型转换
 // 问题：
 // 1. 初始选用的function无法正常初始化 (计算正常)
 
 const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
-  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>([]);
+  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>([])
 
   // useEffect(() => {
   // 1. 初始选用的function无法正常初始化 (计算正常)
@@ -28,43 +27,40 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
 
   const [paramValues, setParamValues] = useState<Record<string, ParamInfo>>(
     current_functions.reduce((acc, ef) => ({ ...acc, [ef.id]: ef.params }), {})
-  );
+  )
 
   const handleParamChange = useCallback((pluginId: string, values: ParamInfo) => {
-    console.log("handleParamChange values", values)
-    setParamValues((prev) => ({
+    console.log('handleParamChange values', values)
+    setParamValues(prev => ({
       ...prev,
-      [pluginId]: values,
-    }));
-  }, []);
+      [pluginId]: values
+    }))
+  }, [])
 
   const handleSave = () => {
-    console.log("func dialog onsave:\n", "all_functions", all_functions, "current_functions", current_functions)
-    console.log("paramValues", paramValues)
+    console.log('func dialog onsave:\n', 'all_functions', all_functions, 'current_functions', current_functions)
+    console.log('paramValues', paramValues)
     // todo: 原本存在但后续被移除的func会被在此处被过滤
     const updatedFunctions = all_functions.filter(
       // 取出对应原始function
-      (func) => selectedFunctionIds.some((id) => (id === func.id))
-    ).map((func) => {
+      func => selectedFunctionIds.some(id => (id === func.id))
+    ).map(func =>
       // 替换params
-      return {
+      ({
         ...func,
         params: paramValues[func.id]
-      }
-    });
+      }))
     onSave(updatedFunctions)
-  };
+  }
 
   const toggleFunction = useCallback((funcId: string) => {
-    setSelectedFunctionIds((prev) =>
-      prev.includes(funcId) ? prev.filter((id) => id !== funcId) : [...prev, funcId]
-    );
-  }, []);
+    setSelectedFunctionIds(prev => (prev.includes(funcId) ? prev.filter(id => id !== funcId) : [...prev, funcId]))
+  }, [])
 
   // 阻止滚动穿透
   const handleTouchMove = useCallback((e: any) => {
-    e.stopPropagation();
-  }, []);
+    e.stopPropagation()
+  }, [])
 
   return (
     <View style={style}>
@@ -72,8 +68,8 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
         <View className="function-dialog">
           <Text className="dialog-title">功能配置</Text>
           <View className="function-list">
-            {all_functions.map((func) => {
-              const isSelected = selectedFunctionIds.includes(func.id);
+            {all_functions.map(func => {
+              const isSelected = selectedFunctionIds.includes(func.id)
               return (
                 <View
                   key={func.id}
@@ -90,16 +86,16 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
                     </Text>
                   </View>
                   {isSelected && (
-                    <View className="function-params" onTap={(e) => e.stopPropagation()}>
+                    <View className="function-params" onTap={e => e.stopPropagation()}>
                       <ParamsInput
                         single_function={func}
-                        current_function={current_functions.find((ef) => ef.id === func.id)}
-                        onChange={(values) => handleParamChange(func.id, values)}
+                        current_function={current_functions.find(ef => ef.id === func.id)}
+                        onChange={values => handleParamChange(func.id, values)}
                       />
                     </View>
                   )}
                 </View>
-              );
+              )
             })}
           </View>
           <View className="dialog-actions">
@@ -113,7 +109,7 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default FunctionDialog;
+export default FunctionDialog

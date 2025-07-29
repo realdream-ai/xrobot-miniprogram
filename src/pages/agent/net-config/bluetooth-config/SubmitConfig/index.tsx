@@ -236,7 +236,7 @@ export default function SubmitConfig() {
         })
       }
     }
-  }, [isActive, handleSubmit, selectedDevice, selectedWifi, passwordState.value, sequenceControl])
+  }, [isActive, handleSubmit, selectedDevice, selectedWifi, passwordState.value, sequenceControl, result])
 
   const renderErrorTips = (error: string | undefined) => (
     <View className={styles.tips}>

@@ -1,4 +1,4 @@
-import { ConfigFunction } from "../manage-agent/types";
+import { ConfigFunction } from '../manage-agent/types'
 
 export interface RoleFormData {
   agentCode: string;

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Input, Text, Button } from 'remax/one';
-import { InputEvent } from 'remax/one';
-import { PorviderPluginFunction, ParamInfo } from '@/pages/common/types';
+import React, { useState, useEffect, useCallback } from 'react'
+import { View, Input, Text, Button, InputEvent } from 'remax/one'
 
-import './index.less';
+import { PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
+
+import './index.less'
 
 interface Props {
   single_function: PorviderPluginFunction;
@@ -20,45 +20,45 @@ interface Field {
 
 const ParamsInput: React.FC<Props> = ({ single_function, current_function, onChange }: Props) => {
   const [values, setValues] = useState<ParamInfo>(() => {
-    const initialValues: ParamInfo = {};
-    const fields: Field[] = JSON.parse(single_function.fields || '[]');
-    fields.forEach((field) => {
-      initialValues[field.key] = current_function?.params[field.key] || field.default || '';
-    });
-    return initialValues;
-  });
+    const initialValues: ParamInfo = {}
+    const fields: Field[] = JSON.parse(single_function.fields || '[]')
+    fields.forEach(field => {
+      initialValues[field.key] = current_function?.params[field.key] || field.default || ''
+    })
+    return initialValues
+  })
 
   const onChangeCallback = useCallback((values: ParamInfo) => {
-    onChange(values);
-  }, [onChange]);
+    onChange(values)
+  }, [onChange])
 
   useEffect(() => {
-    onChangeCallback(values);
-  }, [values]);
+    onChangeCallback(values)
+  }, [onChangeCallback, values])
 
   const handleInputChange = useCallback((key: string, value: string) => {
-    setValues((prev) => ({
+    setValues(prev => ({
       ...prev,
-      [key]: value,
-    }));
-  }, []);
+      [key]: value
+    }))
+  }, [])
 
   const handleReset = useCallback((key: string) => {
-    const fields: Field[] = JSON.parse(single_function.fields || '[]');
-    const field = fields.find((f) => f.key === key);
+    const fields: Field[] = JSON.parse(single_function.fields || '[]')
+    const field = fields.find(f => f.key === key)
     if (field) {
-      setValues((prev) => ({
+      setValues(prev => ({
         ...prev,
-        [key]: field.default || '',
-      }));
+        [key]: field.default || ''
+      }))
     }
-  }, [single_function.fields]);
+  }, [single_function.fields])
 
-  const fields: Field[] = JSON.parse(single_function.fields || '[]');
+  const fields: Field[] = JSON.parse(single_function.fields || '[]')
 
   return (
     <View className="params-input">
-      {fields.map((field) => (
+      {fields.map(field => (
         <View key={`${single_function.id}-${field.key}`} className="input-wrapper">
           <View className="input-header">
             <Text className="input-label">{field.label}</Text>
@@ -79,7 +79,7 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
         </View>
       ))}
     </View>
-  );
-};
+  )
+}
 
-export default ParamsInput;
+export default ParamsInput

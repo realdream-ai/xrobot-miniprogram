@@ -97,7 +97,6 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   // const [originalFunctions, setOriginalFunctions] = useState([])
   // const [enabledParamInfo, setEnabledParamInfo] = useState({})
 
-
   // 插件功能列表，通过api获取
   const [allFunctions, setAllFunctions] = useState<PorviderPluginFunction[]>([])
 
@@ -129,7 +128,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
             return m
           }, {})
           return { ...item, fieldsMeta: meta, params }
-        }) || [];
+        }) || []
         setAllFunctions(allFuncs)
         callback(allFuncs)
       } else {
@@ -203,20 +202,20 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
         }))
 
         // 后端只给了最小映射：[{ id, agentId, pluginId }, ...]
-        const dataFunctions: ConfigFunction[] = res.data.functions || [];
+        const dataFunctions: ConfigFunction[] = res.data.functions || []
         // 先保证 allFunctions 已经加载（如果没有，则先 fetchAllFunctions）
         // const ensureFuncs = allFunctions.length
         //   ? Promise.resolve()
         //   : fetchAllFunctions();
 
-        fetchAllFunctions((allFuncs) => {
+        fetchAllFunctions(allFuncs => {
           // console.log("allFunctions:", allFunctions)
           // 合并：按照 pluginId（id 字段）把全量元数据信息补齐
           const _currentFunctions: PorviderPluginFunction[] = dataFunctions.map(mapping => {
-            const meta: PorviderPluginFunction | undefined = allFuncs.find(f => f.id === mapping.pluginId);
+            const meta: PorviderPluginFunction | undefined = allFuncs.find(f => f.id === mapping.pluginId)
             if (!meta) {
               // 插件定义没找到，退化处理
-              return { id: mapping.pluginId, name: mapping.pluginId, params: {} };
+              return { id: mapping.pluginId, name: mapping.pluginId, params: {} }
             }
             return {
               ...meta,
@@ -225,15 +224,15 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
               // 后端如果还有 paramInfo 字段就用 mapping.paramInfo，否则用 meta.params 默认值
               params: mapping.paramInfo || { ...meta.params },
               fieldsMeta: meta.fieldsMeta  // 保留以便对话框渲染 tooltip
-            };
-          });
-          console.log("setCurrentFunctions(_currentFunctions)", _currentFunctions)
+            }
+          })
+          console.log('setCurrentFunctions(_currentFunctions)', _currentFunctions)
           setCurrentFunctions(_currentFunctions)
 
           // // 备份原始，以备取消时恢复
           // setOriginalFunctions(JSON.parse(JSON.stringify(currentFunctions)));
 
-        });
+        })
       } else {
         console.error(res.msg || '获取配置失败')
       }
@@ -384,12 +383,10 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
       langCode: form.langCode,
       language: form.language,
       sort: form.sort,
-      functions: currentFunctions.map(item => {
-        return ({
-          pluginId: item.id,
-          paramInfo: item.params
-        })
-      })
+      functions: currentFunctions.map(item => ({
+        pluginId: item.id,
+        paramInfo: item.params
+      }))
     }
     // todo 校验tts与voice匹配
 
@@ -446,7 +443,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
               vllmModelId: '',
               memModelId: '',
               intentModelId: ''
-            },
+            }
           })
           setCurrentFunctions([])
           wx.showToast({ title: '配置已重置', icon: 'success' })
@@ -463,7 +460,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   const openFunctionDialog = () => {
     // todo: FunctionDialog暂未完成
     // return null
-    console.log("openFunctionDialog")
+    console.log('openFunctionDialog')
     if (allFunctions.length === 0) {
       // fetchAllFunctions().then(() => setShowFunctionDialog(true))
       // pass
@@ -473,13 +470,13 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   }
 
   const handleUpdateFunctions = (selected: PorviderPluginFunction[]) => {
-    console.log("handleUpdateFunctions, selected:", selected)
+    console.log('handleUpdateFunctions, selected:', selected)
     setCurrentFunctions(selected)
     setShowFunctionDialog(false)
   }
 
   const handleDialogClosed = () => {
-    console.log("handleDialogClosed")
+    console.log('handleDialogClosed')
     setShowFunctionDialog(false)
   }
 
@@ -634,14 +631,16 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
                       {currentFunctions.map((func: any) => (
                         <View key={func.name}
                           className="icon-dot"
-                          style={{ backgroundColor: getFunctionColor(func.name) }} >
+                          style={{ backgroundColor: getFunctionColor(func.name) }}
+                        >
                           <Text className="icon-letter">
                             {func.name.charAt(0)}
                           </Text>
                         </View>
                       ))}
                       <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''}`}
-                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()} >
+                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
+                      >
                         <Text className="edit-btn-text">编辑功能</Text>
                       </View>
                     </View>
