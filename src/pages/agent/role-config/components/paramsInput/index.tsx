@@ -28,13 +28,9 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
     return initialValues
   })
 
-  const onChangeCallback = useCallback((_values: ParamInfo) => {
-    onChange(_values)
-  }, [onChange])
-
   useEffect(() => {
-    onChangeCallback(values)
-  }, [onChangeCallback, values])
+    onChange(values)
+  }, [values])
 
   const handleInputChange = useCallback((key: string, value: string) => {
     setValues(prev => ({

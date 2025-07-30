@@ -29,13 +29,13 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
     current_functions.reduce((acc, ef) => ({ ...acc, [ef.id]: ef.params }), {})
   )
 
-  const handleParamChange = useCallback((pluginId: string, values: ParamInfo) => {
+  const handleParamChange = (pluginId: string, values: ParamInfo) => {
     console.log('handleParamChange values', values)
     setParamValues(prev => ({
       ...prev,
       [pluginId]: values
     }))
-  }, [])
+  }
 
   const handleSave = () => {
     console.log('func dialog onsave:\n', 'all_functions', all_functions, 'current_functions', current_functions)
