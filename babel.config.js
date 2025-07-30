@@ -8,7 +8,7 @@ module.exports = {
         typescript: {
           allowNamespaces: true,
         },
-        "class-properties": {
+        'class-properties': {
           loose: false,
         },
         decorators: {
