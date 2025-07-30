@@ -54,7 +54,9 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
 
   return (
     <View className="params-input">
-      {fields.map(field => (
+      {fields.length === 0 ? <>
+        <Text className='italic'>没有参数</Text>
+      </> : fields.map(field => (
         <View key={`${single_function.id}-${field.key}`} className="input-wrapper">
           <View className="input-header">
             <Text className="input-label">{field.label}</Text>

@@ -1,3 +1,5 @@
+@import '~@/pages/common/style.less';
+
 .params-input {
   display: flex;
   flex-direction: column;
@@ -29,7 +31,7 @@
         border: 1px solid #cccccc;
         border-radius: 4px;
         color: #333333;
-        background-color: #ffffff;
+        background-color: @white;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -59,4 +61,10 @@
       }
     }
   }
+}
+
+.italic {
+  font-style: italic;
+  font-size: 14px;
+  color: @grey-5;
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Input, Textarea, navigateBack } from 'remax/one'
-import { Picker } from 'remax/wechat'
+import { Picker, hideLoading, showLoading } from 'remax/wechat'
 import { useQuery } from 'remax'
 import { usePageEvent } from 'remax/macro'
 import AppBar from '@/components/AppBar'
@@ -54,6 +54,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   const query = useQuery()
   const currentAgentId = query.agentId || ''
   const agentId = currentAgentId
+  const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState<RoleFormData>({
     agentCode: '',
     agentName: '',
@@ -74,6 +75,16 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
       intentModelId: ''
     }
   })
+
+  const beLoad = (b?: boolean) => {
+    if (b) {
+      setIsLoading(true)
+      showLoading({ title: '加载中...' })
+    } else {
+      setIsLoading(false)
+      hideLoading()
+    }
+  }
 
   // 模型配置项
   const models = [
@@ -118,6 +129,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
 
   // 获取插件功能列表，如：服务器音乐播放
   const fetchAllFunctions = (callback: (allFuncs: PorviderPluginFunction[]) => void) => {
+    // beLoad(true)
     api.model.getPluginFunctionList(null, res2 => {
       // console.log('fetchAllFunctions,', res2);
       if (res2.code === 0) {
@@ -134,7 +146,10 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
       } else {
         console.error(res2.msg || '获取插件列表失败')
       }
+      // beLoad(false)
     })
+    const MAX_WAIT = 5000
+    setTimeout(() => { if (isLoading) beLoad(false) }, MAX_WAIT)
   }
 
   const fetchModelOptions = () => {
@@ -621,11 +636,18 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
                     onChange={value => handleModelChange(model.key, value)}
                     placeholder="请选择"
                   />
-
                   {model.type === 'Memory' && form.model.memModelId !== 'Memory_nomem' && (<ChatHistoryRadio value={form.chatHistoryConf} onChange={value => handleInputChange('chatHistoryConf', value)} disabled={form.model.memModelId === 'Memory_nomem'} />)}
+
                   {/* 意图识别功能图标 */}
                   {model.type === 'Intent' && form.model.intentModelId !== 'Intent_nointent' && (
                     <View className="function-icons">
+                      {/* 编辑功能按钮 */}
+                      <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''} ${isLoading ? 'disable' : ''}`}
+                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
+                      >
+                        <Text className="edit-btn-text">编辑功能</Text>
+                      </View>
+                      {/* 已启用功能图标 */}
                       {currentFunctions.map((func: any) => (
                         <View key={func.name}
                           className="icon-dot"
@@ -636,11 +658,6 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
                           </Text>
                         </View>
                       ))}
-                      <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''}`}
-                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
-                      >
-                        <Text className="edit-btn-text">编辑功能</Text>
-                      </View>
                     </View>
                   )}
                 </View>
@@ -670,13 +687,16 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           </View>
         </View>
 
-        <FunctionDialog
-          current_functions={currentFunctions}
-          all_functions={allFunctions}
-          onSave={handleUpdateFunctions}
-          onCancel={handleDialogClosed}
-          style={{ display: showFunctionDialog ? 'block' : 'none' }}
-        />
+        {
+          isLoading && !showFunctionDialog ? <></> :
+            <FunctionDialog
+              current_functions={currentFunctions}
+              all_functions={allFunctions}
+              onSave={handleUpdateFunctions}
+              onCancel={handleDialogClosed}
+              style={{ display: showFunctionDialog ? 'block' : 'none' }}
+            />
+        }
       </View>
     </LoginRequired>
   )

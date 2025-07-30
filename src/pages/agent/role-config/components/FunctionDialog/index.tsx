@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { View, Button, Text } from 'remax/one'
 import { PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
 import ParamsInput from '../paramsInput'
@@ -12,25 +12,19 @@ interface Props {
   onCancel: () => void;
 }
 
-// todo
-// 初始化 paramInfo
-// 问题：
-// 1. 初始选用的function无法正常初始化 (计算正常)
-
 const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
-  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>([])
+  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
 
-  // useEffect(() => {
-  // 1. 初始选用的function无法正常初始化 (计算正常)
-  //   setSelectedFunctionIds(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
-  // }, [all_functions, current_functions])
+  useEffect(() => {
+    setSelectedFunctionIds(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
+  }, [all_functions, current_functions])
 
   const [paramValues, setParamValues] = useState<Record<string, ParamInfo>>(
     current_functions.reduce((acc, ef) => ({ ...acc, [ef.id]: ef.params }), {})
   )
 
   const handleParamChange = (pluginId: string, values: ParamInfo) => {
-    console.log('handleParamChange values', values)
+    // console.log('handleParamChange values', values)
     setParamValues(prev => ({
       ...prev,
       [pluginId]: values
@@ -38,8 +32,8 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
   }
 
   const handleSave = () => {
-    console.log('func dialog onsave:\n', 'all_functions', all_functions, 'current_functions', current_functions)
-    console.log('paramValues', paramValues)
+    // console.log('func dialog onsave:\n', 'all_functions', all_functions, 'current_functions', current_functions)
+    // console.log('paramValues', paramValues)
     // todo: 原本存在但后续被移除的func会被在此处被过滤
     const updatedFunctions = all_functions.filter(
       // 取出对应原始function
