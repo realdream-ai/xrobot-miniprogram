@@ -54,7 +54,10 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
     <View style={style}>
       <View className="function-dialog-overlay" onTouchMove={(e: any) => e.stopPropagation()}>
         <View className="function-dialog">
-          <Text className="dialog-title">功能配置</Text>
+          <Text className="dialog-title">
+            功能配置
+            <Text className="dialog-title-tip">点击功能标题切换开启/关闭</Text>
+          </Text>
           <View className="function-list">
             {all_functions.map(func => {
               const isSelected = selectedFunctionIds.includes(func.id)
