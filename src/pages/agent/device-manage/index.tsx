@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { View, Text, Input, Button } from 'remax/wechat'
+import { usePageEvent } from 'remax/macro'
 import api from '@/apis/api'
 import { nameMap, Pages } from '@/constants/route'
 import AppBar from '@/components/AppBar'
 import BackLeading from '@/components/AppBar/BackLeading'
-import { View, Text, Input, Button } from 'remax/wechat'
-import { usePageEvent } from 'remax/macro'
+import Scaffold from '@/components/Scaffold'
 import { useQuery } from 'remax'
 import LoginRequired from '@/components/LoginRequired'
 import DeviceCard from './components/DeviceCard'
@@ -91,8 +92,8 @@ const DeviceManagement: React.FC = () => {
   // 选中单个设备
   const handleSelect = (deviceId: string) => {
     setDevices(prevDevices => prevDevices.map(device => (device.device_id === deviceId
-          ? { ...device, selected: !device.selected }
-          : device)))
+      ? { ...device, selected: !device.selected }
+      : device)))
   }
 
   // 全选/取消全选
@@ -265,39 +266,97 @@ const DeviceManagement: React.FC = () => {
   }, [query])
 
   return (
-    <LoginRequired>
-      <View className="device-management">
-        <AppBar
-          title={nameMap[Pages.XrobotDeviceManage]}
-          leading={<BackLeading />}
-        />
-        <View className="search-bar">
-          <Input
-            className="search-input"
-            placeholder="请输入设备型号或Mac地址查询"
-            value={searchKeyword}
-            onInput={e => setSearchKeyword(e.detail.value)}
-            confirmType="search"
-            onConfirm={handleSearch}
-          />
-          <Button className="search-button" onClick={handleSearch}>
-            搜索
-          </Button>
-        </View>
+    <Scaffold appBar={<AppBar title={nameMap[Pages.XrobotDeviceManage]} leading={<BackLeading />} />}>
+      <LoginRequired>
+        <View className="device-management">
+          <View className="search-bar">
+            <Input
+              className="search-input"
+              placeholder="请输入设备型号或Mac地址查询"
+              value={searchKeyword}
+              onInput={e => setSearchKeyword(e.detail.value)}
+              confirmType="search"
+              onConfirm={handleSearch}
+            />
+            <Button className="search-button" onClick={handleSearch}>
+              搜索
+            </Button>
+          </View>
 
-        <View className="device-list">
-          {loading ? (
-            <View className="loading">加载中...</View>
-          ) : <>{paginatedDevices.length === 0 ? (
-            <View className="empty">无绑定设备，下方添加</View>
-          ) : null}</>}
-          {paginatedDevices.length > 0 && paginatedDevices.map(device => (
-            <DeviceCard
-              key={device.device_id}
-              device={device}
-              onSelect={handleSelect}
-              onDetail={handleDetail}
-              onUnbind={deviceId => {
+          <View className="device-list">
+            {loading ? (
+              <View className="loading">加载中...</View>
+            ) : <>{paginatedDevices.length === 0 ? (
+              <View className="empty">无绑定设备，下方添加</View>
+            ) : null}</>}
+            {paginatedDevices.length > 0 && paginatedDevices.map(device => (
+              <DeviceCard
+                key={device.device_id}
+                device={device}
+                onSelect={handleSelect}
+                onDetail={handleDetail}
+                onUnbind={deviceId => {
+                  wx.showModal({
+                    title: '提示',
+                    content: '此操作将解绑该设备，是否继续？',
+                    confirmText: '确定',
+                    cancelText: '取消',
+                    success: res => {
+                      if (res.confirm) {
+                        api.device.unbindDevice(deviceId, res_unbind => {
+                          if (res_unbind.code === 0) {
+                            console.log(`设备 ${deviceId} 解绑成功`)
+                            fetchBindDevices(agentId)
+                          }
+                        })
+                      }
+                    }
+                  })
+                }}
+                getFirmwareTypeName={getFirmwareTypeName}
+              />
+            ))}
+          </View>
+
+          {paginatedDevices.length > 0 && (
+            <View className="pagination">
+              <Text className="page-info">
+                第 {currentPage} 页 / 共 {pageCount} 页
+              </Text>
+              <Button
+                className="load-more-button"
+                disabled={currentPage >= pageCount}
+                onClick={handleLoadMore}
+              >
+                加载更多
+              </Button>
+            </View>
+          )}
+
+          <View className="bottom-bar">
+            <Button className="bottom-button" onClick={handleAddDevice}>
+              绑定设备
+            </Button>
+            <Button className="bottom-button danger" onClick={handleDeleteSelected}>
+              解绑
+            </Button>
+            <Button className="bottom-button" onClick={handleSelectAll}>
+              {paginatedDevices.length !== 0
+                && paginatedDevices.every(device => device.selected)
+                ? '取消全选'
+                : '全选'}
+            </Button>
+            {/* <Button className="bottom-button" onClick={handleManualAddDevice}>
+          批量预先导入
+        </Button> */}
+          </View>
+
+          {selectedDeviceId && (
+            <DeviceDetail
+              device={devices.find(d => d.device_id === selectedDeviceId)!}
+              onClose={handleCloseDetail}
+              onUpdate={handleDeviceUpdate}
+              onUnbind={() => {
                 wx.showModal({
                   title: '提示',
                   content: '此操作将解绑该设备，是否继续？',
@@ -305,10 +364,11 @@ const DeviceManagement: React.FC = () => {
                   cancelText: '取消',
                   success: res => {
                     if (res.confirm) {
-                      api.device.unbindDevice(deviceId, res_unbind => {
+                      api.device.unbindDevice(selectedDeviceId, res_unbind => {
                         if (res_unbind.code === 0) {
-                          console.log(`设备 ${deviceId} 解绑成功`)
+                          console.log('设备解绑成功')
                           fetchBindDevices(agentId)
+                          handleCloseDetail()
                         }
                       })
                     }
@@ -317,87 +377,26 @@ const DeviceManagement: React.FC = () => {
               }}
               getFirmwareTypeName={getFirmwareTypeName}
             />
-          ))}
-        </View>
+          )}
 
-        {paginatedDevices.length > 0 && (
-          <View className="pagination">
-            <Text className="page-info">
-              第 {currentPage} 页 / 共 {pageCount} 页
-            </Text>
-            <Button
-              className="load-more-button"
-              disabled={currentPage >= pageCount}
-              onClick={handleLoadMore}
-            >
-              加载更多
-            </Button>
-          </View>
-        )}
+          {showAddDialog && (
+            <AddDeviceDialog
+              agentId={agentId}
+              onClose={handleCloseAddDialog}
+              onConfirm={handleConfirmAddDevice}
+            />
+          )}
 
-        <View className="bottom-bar">
-          <Button className="bottom-button" onClick={handleAddDevice}>
-            绑定设备
-          </Button>
-          <Button className="bottom-button danger" onClick={handleDeleteSelected}>
-            解绑
-          </Button>
-          <Button className="bottom-button" onClick={handleSelectAll}>
-            {paginatedDevices.length !== 0
-              && paginatedDevices.every(device => device.selected)
-              ? '取消全选'
-              : '全选'}
-          </Button>
-          {/* <Button className="bottom-button" onClick={handleManualAddDevice}>
-          批量预先导入
-        </Button> */}
-        </View>
-
-        {selectedDeviceId && (
-          <DeviceDetail
-            device={devices.find(d => d.device_id === selectedDeviceId)!}
-            onClose={handleCloseDetail}
-            onUpdate={handleDeviceUpdate}
-            onUnbind={() => {
-              wx.showModal({
-                title: '提示',
-                content: '此操作将解绑该设备，是否继续？',
-                confirmText: '确定',
-                cancelText: '取消',
-                success: res => {
-                  if (res.confirm) {
-                    api.device.unbindDevice(selectedDeviceId, res_unbind => {
-                      if (res_unbind.code === 0) {
-                        console.log('设备解绑成功')
-                        fetchBindDevices(agentId)
-                        handleCloseDetail()
-                      }
-                    })
-                  }
-                }
-              })
-            }}
-            getFirmwareTypeName={getFirmwareTypeName}
-          />
-        )}
-
-        {showAddDialog && (
-          <AddDeviceDialog
-            agentId={agentId}
-            onClose={handleCloseAddDialog}
-            onConfirm={handleConfirmAddDevice}
-          />
-        )}
-
-        {/* {showManualAddDialog && (
+          {/* {showManualAddDialog && (
         <ManualAddDeviceDialog
           agentId={agentId}
           onClose={handleCloseManualAddDialog}
           onConfirm={handleConfirmManualAddDevice}
         />
       )} */}
-      </View>
-    </LoginRequired>
+        </View>
+      </LoginRequired>
+    </Scaffold>
   )
 }
 

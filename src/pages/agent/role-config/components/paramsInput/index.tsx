@@ -30,7 +30,8 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
 
   useEffect(() => {
     onChange(values)
-  }, [onChange, values])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values])
 
   const handleInputChange = useCallback((key: string, value: string) => {
     setValues(prev => ({

@@ -9,6 +9,7 @@ import { nameMap, Pages } from '@/constants/route'
 import api from '@/apis/api'
 import { ConfigFunction, ModelItem, PorviderPluginFunction } from '@/pages/common/types'
 import type { AgentTemplate } from '@/pages/agent/manage-agent/types'
+import Scaffold from '@/components/Scaffold'
 import LoginRequired from '@/components/LoginRequired'
 
 import type {
@@ -540,13 +541,10 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   }
 
   return (
-    <LoginRequired>
-      <View className="config-page">
-        <AppBar
-          title={nameMap[Pages.XrobotRoleConfig]}
-          leading={<BackLeading />}
-        />
-        {/*
+    <Scaffold appBar={<AppBar title={nameMap[Pages.XrobotRoleConfig]} leading={<BackLeading />} />}>
+      <LoginRequired>
+        <View className="config-page">
+          {/*
         <View className="hint-text">
           <Text className="info-icon">ℹ️</Text>
           <Text className="hint-content">
@@ -554,143 +552,144 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           </Text>
         </View> */}
 
-        <View className="divider" />
+          {/* <View className="divider" /> */}
 
-        <View className="form-content">
-          <View className="form-column">
-            {/* 助手昵称 */}
-            <View className="form-item">
-              <Text className="form-label">助手昵称：</Text>
-              <Input
-                className="form-input"
-                value={form.agentName}
-                onInput={(e: InputEvent) => handleInputChange('agentName', e.target.value)}
-                placeholder="请输入助手昵称"
-                maxLength={10}
-              />
-            </View>
-
-            {/* 角色模版 */}
-            <View className="form-item">
-              <Text className="form-label">角色模版：</Text>
-              <View className="template-container">
-                {templates.map((template, index) => (
-                  <View
-                    key={index}
-                    className={`template-item ${loadingTemplate ? 'template-loading' : ''}`}
-                    onTap={() => selectTemplate(template)}
-                  >
-                    <Text className="template-text">{template.agentName}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-
-            {/* 角色介绍 */}
-            <View className="form-item">
-              <Text className="form-label">角色介绍：</Text>
-              <View className="textarea-container">
-                <Textarea
-                  className="form-textarea"
-                  value={form.systemPrompt}
-                  onInput={(e: InputEvent) => handleInputChange('systemPrompt', e.target.value)}
-                  placeholder="请输入内容"
-                  maxLength={2000}
+          <View className="form-content">
+            <View className="form-column">
+              {/* 助手昵称 */}
+              <View className="form-item">
+                <Text className="form-label">助手昵称：</Text>
+                <Input
+                  className="form-input"
+                  value={form.agentName}
+                  onInput={(e: InputEvent) => handleInputChange('agentName', e.target.value)}
+                  placeholder="请输入助手昵称"
+                  maxLength={10}
                 />
-                <Text className="char-count">
-                  {form.systemPrompt.length}/2000
-                </Text>
               </View>
-            </View>
 
-            {/* 记忆 */}
-            <View className="form-item">
-              <Text className="form-label">记忆：</Text>
-              <View className="textarea-container">
-                <Textarea
-                  className="form-textarea memory-textarea"
-                  value={form.summaryMemory}
-                  onInput={(e: InputEvent) => handleInputChange('summaryMemory', e.target.value)}
-                  placeholder={
-                    form.model.memModelId === 'Memory_mem_local_short'
-                      ? '请输入记忆内容'
-                      : '当前记忆模型不支持编辑'
-                  }
-                  maxLength={2000}
-                  disabled={form.model.memModelId !== 'Memory_mem_local_short'}
-                />
-                <Text className="char-count">
-                  {form.summaryMemory?.length || 0}/2000
-                </Text>
-              </View>
-            </View>
-
-            {/* 模型配置 */}
-            {models.map((model, index) => (
-              <View key={index} className="form-item">
-                <Text className="form-label">{model.label}</Text>
-                <View className="model-select-wrapper">
-                  <SimpleSelect
-                    value={form.model[model.key] || '无数据'}
-                    options={modelOptions[model.type] || []}
-                    onChange={value => handleModelChange(model.key, value)}
-                    placeholder="请选择"
-                  />
-                  {model.type === 'Memory' && form.model.memModelId !== 'Memory_nomem' && (<ChatHistoryRadio value={form.chatHistoryConf} onChange={value => handleInputChange('chatHistoryConf', value)} disabled={form.model.memModelId === 'Memory_nomem'} />)}
-
-                  {/* 意图识别功能图标 */}
-                  {model.type === 'Intent' && form.model.intentModelId !== 'Intent_nointent' && (
-                    <View className="function-icons">
-                      {/* 编辑功能按钮 */}
-                      <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''} ${isLoading ? 'disable' : ''}`}
-                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
-                      >
-                        <Text className="edit-btn-text">编辑功能</Text>
-                      </View>
-                      {/* 已启用功能图标 */}
-                      {currentFunctions.map((func: any) => (
-                        <View key={func.name}
-                          className="icon-dot"
-                          style={{ backgroundColor: getFunctionColor(func.name) }}
-                        >
-                          <Text className="icon-letter">
-                            {func.name.charAt(0)}
-                          </Text>
-                        </View>
-                      ))}
+              {/* 角色模版 */}
+              <View className="form-item">
+                <Text className="form-label">角色模版：</Text>
+                <View className="template-container">
+                  {templates.map((template, index) => (
+                    <View
+                      key={index}
+                      className={`template-item ${loadingTemplate ? 'template-loading' : ''}`}
+                      onTap={() => selectTemplate(template)}
+                    >
+                      <Text className="template-text">{template.agentName}</Text>
                     </View>
-                  )}
+                  ))}
                 </View>
               </View>
-            ))}
 
-            {/* 角色音色 */}
-            <View className="form-item">
-              <Text className="form-label">角色音色</Text>
-              <SimpleSelect
-                value={form.ttsVoiceId}
-                options={voiceOptions}
-                onChange={value => handleInputChange('ttsVoiceId', value)}
-                placeholder="请选择"
-              />
+              {/* 角色介绍 */}
+              <View className="form-item">
+                <Text className="form-label">角色介绍：</Text>
+                <View className="textarea-container">
+                  <Textarea
+                    className="form-textarea"
+                    value={form.systemPrompt}
+                    onInput={(e: InputEvent) => handleInputChange('systemPrompt', e.target.value)}
+                    placeholder="请输入内容"
+                    maxLength={2000}
+                  />
+                  <Text className="char-count">
+                    {form.systemPrompt.length}/2000
+                  </Text>
+                </View>
+              </View>
+
+              {/* 记忆 */}
+              <View className="form-item">
+                <Text className="form-label">记忆：</Text>
+                <View className="textarea-container">
+                  <Textarea
+                    className="form-textarea memory-textarea"
+                    value={form.summaryMemory}
+                    onInput={(e: InputEvent) => handleInputChange('summaryMemory', e.target.value)}
+                    placeholder={
+                      form.model.memModelId === 'Memory_mem_local_short'
+                        ? '请输入记忆内容'
+                        : '当前记忆模型不支持编辑'
+                    }
+                    maxLength={2000}
+                    disabled={form.model.memModelId !== 'Memory_mem_local_short'}
+                  />
+                  <Text className="char-count">
+                    {form.summaryMemory?.length || 0}/2000
+                  </Text>
+                </View>
+              </View>
+
+              {/* 模型配置 */}
+              {models.map((model, index) => (
+                <View key={index} className="form-item">
+                  <Text className="form-label">{model.label}</Text>
+                  <View className="model-select-wrapper">
+                    <SimpleSelect
+                      value={form.model[model.key] || '无数据'}
+                      options={modelOptions[model.type] || []}
+                      onChange={value => handleModelChange(model.key, value)}
+                      placeholder="请选择"
+                    />
+                    {model.type === 'Memory' && form.model.memModelId !== 'Memory_nomem' && (<ChatHistoryRadio value={form.chatHistoryConf} onChange={value => handleInputChange('chatHistoryConf', value)} disabled={form.model.memModelId === 'Memory_nomem'} />)}
+
+                    {/* 意图识别功能图标 */}
+                    {model.type === 'Intent' && form.model.intentModelId !== 'Intent_nointent' && (
+                      <View className="function-icons">
+                        {/* 编辑功能按钮 */}
+                        <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''} ${isLoading ? 'disable' : ''}`}
+                          onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
+                        >
+                          <Text className="edit-btn-text">编辑功能</Text>
+                        </View>
+                        {/* 已启用功能图标 */}
+                        {currentFunctions.map((func: any) => (
+                          <View key={func.name}
+                            className="icon-dot"
+                            style={{ backgroundColor: getFunctionColor(func.name) }}
+                          >
+                            <Text className="icon-letter">
+                              {func.name.charAt(0)}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                </View>
+              ))}
+
+              {/* 角色音色 */}
+              <View className="form-item">
+                <Text className="form-label">角色音色</Text>
+                <SimpleSelect
+                  value={form.ttsVoiceId}
+                  options={voiceOptions}
+                  onChange={value => handleInputChange('ttsVoiceId', value)}
+                  placeholder="请选择"
+                />
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* Footer */}
-        <View className="form-footer">
-          <View className="btn btn-primary" onTap={handleSaveConfig}>
-            <Text className="btn-text">保存配置</Text>
+          {/* Footer */}
+          <View className="form-footer">
+            <View className="btn btn-primary" onTap={handleSaveConfig}>
+              <Text className="btn-text">保存配置</Text>
+            </View>
+            <View className="btn btn-secondary" onTap={resetConfig}>
+              <Text className="btn-text">重置</Text>
+            </View>
           </View>
-          <View className="btn btn-secondary" onTap={resetConfig}>
-            <Text className="btn-text">重置</Text>
-          </View>
-        </View>
 
-        {/* 编辑功能对话框 */}
-        {isLoading && !showFunctionDialog ? <></> : <FunctionDialog current_functions={currentFunctions} all_functions={allFunctions} onSave={handleUpdateFunctions} onCancel={handleDialogClosed} style={{ display: showFunctionDialog ? 'block' : 'none' }} />}
-      </View>
-    </LoginRequired>
+          {/* 编辑功能对话框 */}
+          {isLoading && !showFunctionDialog ? <></> : <FunctionDialog current_functions={currentFunctions} all_functions={allFunctions} onSave={handleUpdateFunctions} onCancel={handleDialogClosed} style={{ display: showFunctionDialog ? 'block' : 'none' }} />}
+        </View>
+      </LoginRequired>
+    </Scaffold>
   )
 }
 

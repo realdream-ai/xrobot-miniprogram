@@ -139,7 +139,7 @@ export default function ManageAgent() {
   }
 
   return (
-    <Scaffold appBar={<AppBar title="我的智能体" />}>
+    <Scaffold appBar={<AppBar title={nameMap[Pages.XrobotManageAgent]} />}>
       <LoginRequired
         noLoginView={
           <View className="col-container">
