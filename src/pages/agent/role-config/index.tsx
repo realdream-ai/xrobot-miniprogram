@@ -687,16 +687,8 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           </View>
         </View>
 
-        {
-          isLoading && !showFunctionDialog ? <></> :
-            <FunctionDialog
-              current_functions={currentFunctions}
-              all_functions={allFunctions}
-              onSave={handleUpdateFunctions}
-              onCancel={handleDialogClosed}
-              style={{ display: showFunctionDialog ? 'block' : 'none' }}
-            />
-        }
+        {/* 编辑功能对话框 */}
+        {isLoading && !showFunctionDialog ? <></> : <FunctionDialog current_functions={currentFunctions} all_functions={allFunctions} onSave={handleUpdateFunctions} onCancel={handleDialogClosed} style={{ display: showFunctionDialog ? 'block' : 'none' }} />}
       </View>
     </LoginRequired>
   )

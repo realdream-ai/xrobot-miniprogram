@@ -30,7 +30,7 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
 
   useEffect(() => {
     onChange(values)
-  }, [values])
+  }, [onChange, values])
 
   const handleInputChange = useCallback((key: string, value: string) => {
     setValues(prev => ({
@@ -54,28 +54,30 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
 
   return (
     <View className="params-input">
-      {fields.length === 0 ? <>
-        <Text className='italic'>没有参数</Text>
-      </> : fields.map(field => (
-        <View key={`${single_function.id}-${field.key}`} className="input-wrapper">
-          <View className="input-header">
-            <Text className="input-label">{field.label}</Text>
-            <Button
-              className="reset-button"
-              onTap={() => handleReset(field.key)}
-            >
-              ↺
-            </Button>
+      {fields.length === 0
+        ? <>
+          <Text className="italic">没有参数</Text>
+        </>
+        : fields.map(field => (
+          <View key={`${single_function.id}-${field.key}`} className="input-wrapper">
+            <View className="input-header">
+              <Text className="input-label">{field.label}</Text>
+              <Button
+                className="reset-button"
+                onTap={() => handleReset(field.key)}
+              >
+                ↺
+              </Button>
+            </View>
+            <Input
+              className="input-field"
+              id={`${single_function.id}-${field.key}`}
+              value={values[field.key] || ''}
+              onInput={(e: InputEvent) => handleInputChange(field.key, e.target.value)}
+              placeholder={`请输入${field.label}`}
+            />
           </View>
-          <Input
-            className="input-field"
-            id={`${single_function.id}-${field.key}`}
-            value={values[field.key] || ''}
-            onInput={(e: InputEvent) => handleInputChange(field.key, e.target.value)}
-            placeholder={`请输入${field.label}`}
-          />
-        </View>
-      ))}
+        ))}
     </View>
   )
 }
