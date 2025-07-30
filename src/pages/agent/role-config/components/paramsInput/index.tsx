@@ -30,7 +30,7 @@ const ParamsInput: React.FC<Props> = ({ single_function, current_function, onCha
 
   useEffect(() => {
     onChange(values)
-  }, [values])
+  }, [onChange, values])
 
   const handleInputChange = useCallback((key: string, value: string) => {
     setValues(prev => ({

@@ -13,7 +13,9 @@ interface Props {
 }
 
 const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
-  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
+  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(
+    current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id))
+  )
 
   useEffect(() => {
     setSelectedFunctionIds(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
@@ -41,7 +43,7 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
       ...func,
       params: paramValues[func.id]
     }))
-    console.log("save function:", updatedFunctions)
+    console.log('save function:', updatedFunctions)
     onSave(updatedFunctions)
   }
 
