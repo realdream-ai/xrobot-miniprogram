@@ -1,3 +1,5 @@
+@import '~@/pages/common/style.less';
+
 .function-dialog-overlay {
   position: fixed;
   top: 0;
@@ -12,7 +14,7 @@
 }
 
 .function-dialog {
-  background-color: #ffffff;
+  background-color: @white;
   border-radius: 8px;
   width: 90%;
   max-height: 90vh;
@@ -24,9 +26,9 @@
   .dialog-title {
     font-size: 18px;
     font-weight: 600;
-    color: #333333;
+    color: @grey-7;
     padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid @grey-4;
   }
 
   .function-list {
@@ -38,7 +40,7 @@
     gap: 12px;
 
     .function-card {
-      border: 1px solid #e0e0e0;
+      border: 1px solid @grey-4;
       border-radius: 6px;
       padding: 12px;
       cursor: pointer;
@@ -50,7 +52,7 @@
       }
 
       &.selected {
-        background-color: #e6f3ff;
+        background-color: @blue-1;
       }
 
       .function-card-content {
@@ -62,12 +64,12 @@
           .function-name {
             font-size: 16px;
             font-weight: 500;
-            color: #333333;
+            color: @grey-7;
           }
 
           .function-code {
             font-size: 12px;
-            color: #666666;
+            color: @grey-6;
             margin-top: 4px;
           }
         }
@@ -81,7 +83,7 @@
           }
 
           &.disabled {
-            color: #999999;
+            color: @grey-5;
           }
         }
       }
@@ -89,14 +91,14 @@
       .function-params {
         margin-top: 12px;
         padding-top: 12px;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid @grey-4;
       }
     }
   }
 
   .dialog-actions {
     padding: 20px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid @grey-4;
     display: flex;
     justify-content: flex-end;
     gap: 12px;
@@ -109,9 +111,9 @@
       transition: background-color 0.3s ease;
 
       &.cancel {
-        border: 1px solid #cccccc;
-        background-color: #ffffff;
-        color: #333333;
+        border: 1px solid @grey-4;
+        background-color: @white;
+        color: @grey-7;
 
         &:hover {
           background-color: #f5f5f5;
@@ -121,7 +123,7 @@
       &.save {
         border: none;
         background-color: #007bff;
-        color: #ffffff;
+        color: @white;
 
         &:hover {
           background-color: #0056b3;

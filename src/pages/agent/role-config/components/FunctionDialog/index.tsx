@@ -12,6 +12,8 @@ interface Props {
   onCancel: () => void;
 }
 
+// todo: 目前进入role-config页面该组件会不断触发某些东西，导致卡死
+
 const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
   const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
 
@@ -24,7 +26,7 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
   )
 
   const handleParamChange = (pluginId: string, values: ParamInfo) => {
-    // console.log('handleParamChange values', values)
+    console.log('handleParamChange values', values)
     setParamValues(prev => ({
       ...prev,
       [pluginId]: values
