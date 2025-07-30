@@ -12,8 +12,6 @@ interface Props {
   onCancel: () => void;
 }
 
-// todo: 目前进入role-config页面该组件会不断触发某些东西，导致卡死
-
 const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
   const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
 
@@ -34,8 +32,6 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
   }
 
   const handleSave = () => {
-    // console.log('func dialog onsave:\n', 'all_functions', all_functions, 'current_functions', current_functions)
-    // console.log('paramValues', paramValues)
     // todo: 原本存在但后续被移除的func会被在此处被过滤
     const updatedFunctions = all_functions.filter(
       // 取出对应原始function
@@ -45,6 +41,7 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
       ...func,
       params: paramValues[func.id]
     }))
+    console.log("save function:", updatedFunctions)
     onSave(updatedFunctions)
   }
 
@@ -52,14 +49,10 @@ const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onS
     setSelectedFunctionIds(prev => (prev.includes(funcId) ? prev.filter(id => id !== funcId) : [...prev, funcId]))
   }, [])
 
-  // 阻止滚动穿透
-  const handleTouchMove = useCallback((e: any) => {
-    e.stopPropagation()
-  }, [])
-
+  // todo：滚动穿透问题
   return (
     <View style={style}>
-      <View className="function-dialog-overlay" onTouchMove={handleTouchMove}>
+      <View className="function-dialog-overlay" onTouchMove={(e: any) => e.stopPropagation()}>
         <View className="function-dialog">
           <Text className="dialog-title">功能配置</Text>
           <View className="function-list">

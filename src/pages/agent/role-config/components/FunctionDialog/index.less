@@ -52,7 +52,7 @@
       }
 
       &.selected {
-        background-color: @blue-1;
+        background-color: #e6f3ff;
       }
 
       .function-card-content {
@@ -100,15 +100,16 @@
     padding: 20px;
     border-top: 1px solid @grey-4;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-evenly;
     gap: 12px;
 
     .dialog-button {
-      padding: 8px 16px;
+      height: fit-content;
       border-radius: 4px;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      width: 40%;
 
       &.cancel {
         border: 1px solid @grey-4;
