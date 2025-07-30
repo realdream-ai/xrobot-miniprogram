@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, Input, Textarea, navigateBack } from 'remax/one'
-import { Picker } from 'remax/wechat'
+import { Picker, hideLoading, showLoading } from 'remax/wechat'
 import { useQuery } from 'remax'
 import { usePageEvent } from 'remax/macro'
 import AppBar from '@/components/AppBar'
 import BackLeading from '@/components/AppBar/BackLeading'
 import { nameMap, Pages } from '@/constants/route'
 import api from '@/apis/api'
-import { ConfigFunction, ModelItem } from '@/pages/common/types'
+import { ConfigFunction, ModelItem, PorviderPluginFunction } from '@/pages/common/types'
 import type { AgentTemplate } from '@/pages/agent/manage-agent/types'
 import LoginRequired from '@/components/LoginRequired'
-// import FunctionDialog from './components/FunctionDialog'
-// import { functionColorMap } from './constrants'
 
 import type {
   RoleFormData,
@@ -23,7 +21,8 @@ import type {
 } from './types'
 import { DefaultModelOptions } from './types'
 import './index.less'
-// import { ConfigFunction, ModelItem, PorviderPluginFunction } from '../../common/types'
+import FunctionDialog from './components/FunctionDialog'
+import { functionColorMap } from './constrants'
 
 // 事件类型定义
 interface InputEvent {
@@ -55,6 +54,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   const query = useQuery()
   const currentAgentId = query.agentId || ''
   const agentId = currentAgentId
+  const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState<RoleFormData>({
     agentCode: '',
     agentName: '',
@@ -76,6 +76,16 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     }
   })
 
+  const beLoad = (b?: boolean) => {
+    if (b) {
+      setIsLoading(true)
+      showLoading({ title: '加载中...' })
+    } else {
+      setIsLoading(false)
+      hideLoading()
+    }
+  }
+
   // 模型配置项
   const models = [
     // { label: '语音活动检测(VAD)', key: 'vadModelId' as ModelID, type: 'VAD'  as ModelType},
@@ -92,11 +102,14 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   const [loadingTemplate, setLoadingTemplate] = useState(false)
 
   // 当前角色启用的插件功能
-  const [enabledFunctions, setEabledFunctions] = useState<ConfigFunction[]>([])
-  // const [showFunctionDialog, setShowFunctionDialog] = useState(false)
+  const [currentFunctions, setCurrentFunctions] = useState<PorviderPluginFunction[]>([])
+  const [showFunctionDialog, setShowFunctionDialog] = useState(false)
+  // const [enabledFunctions, setEabledFunctions] = useState<PluginId[]>([])
+  // const [originalFunctions, setOriginalFunctions] = useState([])
+  // const [enabledParamInfo, setEnabledParamInfo] = useState({})
 
   // 插件功能列表，通过api获取
-  // const [allFunctions, setAllFunctions] = useState<ConfigFunction[]>([])
+  const [allFunctions, setAllFunctions] = useState<PorviderPluginFunction[]>([])
 
   // 模型选项
   const [modelOptions, setModelOptions] = useState<ModelOptions>(DefaultModelOptions)
@@ -114,28 +127,30 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     })
   }
 
-  // // 获取插件功能列表，如：服务器音乐播放
-  // const fetchAllFunctions = () => new Promise((resolve, reject) => {
-  //   api.model.getPluginFunctionList(null, res => {
-  //     // console.log('fetchAllFunctions,', res);
-  //     if (res.code === 0) {
-  //       setAllFunctions(
-  //         res.data.map((item: PorviderPluginFunction) => {
-  //           const meta = JSON.parse(item.fields || '[]')
-  //           const params = meta.reduce((m: any, f: any) => {
-  //             m[f.key] = f.default
-  //             return m
-  //           }, {})
-  //           return { ...item, fieldsMeta: meta, params }
-  //         }) || []
-  //       )
-  //       resolve(null)
-  //     } else {
-  //       // console.error(res.msg || '获取插件列表失败')
-  //       reject()
-  //     }
-  //   })
-  // })
+  // 获取插件功能列表，如：服务器音乐播放
+  const fetchAllFunctions = (callback: (allFuncs: PorviderPluginFunction[]) => void) => {
+    // beLoad(true)
+    api.model.getPluginFunctionList(null, res2 => {
+      // console.log('fetchAllFunctions,', res2);
+      if (res2.code === 0) {
+        const allFuncs = res2.data.map((item: PorviderPluginFunction) => {
+          const meta = JSON.parse(item.fields || '[]')
+          const params = meta.reduce((m: any, f: any) => {
+            m[f.key] = f.default
+            return m
+          }, {})
+          return { ...item, fieldsMeta: meta, params }
+        }) || []
+        setAllFunctions(allFuncs)
+        callback(allFuncs)
+      } else {
+        console.error(res2.msg || '获取插件列表失败')
+      }
+      // beLoad(false)
+    })
+    const MAX_WAIT = 5000
+    setTimeout(() => { if (isLoading) beLoad(false) }, MAX_WAIT)
+  }
 
   const fetchModelOptions = () => {
     models.forEach(model => {
@@ -184,7 +199,8 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     if (!_agentId) return
     api.agent.getDeviceConfig(_agentId, res => {
       if (res.code === 0) {
-        setForm(prev => ({ ...prev,
+        setForm(prev => ({
+          ...prev,
           ...res.data,
           // 若为空，tts音色模型默认：湾湾小何
           ttsVoiceId: res.data.ttsVoiceId || 'a5b85a7ba5b24a9a96e24aa88b500d2f',
@@ -197,34 +213,40 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
             vllmModelId: res.data.vllmModelId,  // || modelOptions.VLLM?.[0].value || '',
             memModelId: res.data.memModelId,  // || modelOptions.Memory?.[0].value || '',
             intentModelId: res.data.intentModelId  // || modelOptions.Intent?.[0].value || ''
-          } }))
+          }
+        }))
 
-        // const savedMappings = res.data.functions || []
+        // 后端只给了最小映射：[{ id, agentId, pluginId }, ...]
+        const dataFunctions: ConfigFunction[] = res.data.functions || []
+        // 先保证 allFunctions 已经加载（如果没有，则先 fetchAllFunctions）
         // const ensureFuncs = allFunctions.length
         //   ? Promise.resolve()
-        //   : fetchAllFunctions()
-        // ensureFuncs.then(() => {
-        //   setEabledFunctions(
-        //     savedMappings.map((mapping: ConfigFunction) => {
-        //       const meta = allFunctions.find(f => f.id === mapping.pluginId)
-        //       return meta
-        //         ? {
-        //           id: mapping.pluginId,
-        //           name: meta.name,
-        //           params: mapping.paramInfo || { ...meta.params },
-        //           fieldsMeta: meta.fieldsMeta
-        //         }
-        //         : {
-        //           id: mapping.pluginId,
-        //           name: mapping.pluginId,
-        //           params: {},
-        //           fieldsMeta: []
-        //         }
-        //     })
-        //   )
-        // })
+        //   : fetchAllFunctions();
+
+        fetchAllFunctions(allFuncs => {
+          // 合并：按照 pluginId（id 字段）把全量元数据信息补齐
+          const curFuncs: PorviderPluginFunction[] = dataFunctions.map(mapping => {
+            const meta: PorviderPluginFunction | undefined = allFuncs.find(f => f.id === mapping.pluginId)
+            if (!meta) {
+              // 插件定义没找到，退化处理
+              return { id: mapping.pluginId, name: mapping.pluginId, params: {} } as PorviderPluginFunction
+            }
+            return {
+              ...meta,
+              id: mapping.pluginId,
+              // name: meta.name,
+              // 后端如果还有 paramInfo 字段就用 mapping.paramInfo，否则用 meta.params 默认值
+              params: mapping.paramInfo || { ...meta.params },
+              fieldsMeta: meta.fieldsMeta  // 保留以便对话框渲染 tooltip
+            } as PorviderPluginFunction
+          })
+          setCurrentFunctions(curFuncs)
+
+          // // 备份原始，以备取消时恢复
+          // setOriginalFunctions(JSON.parse(JSON.stringify(currentFunctions)));
+
+        })
       } else {
-        // eslint-disable-next-line no-console
         console.error(res.msg || '获取配置失败')
       }
     })
@@ -374,7 +396,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
       langCode: form.langCode,
       language: form.language,
       sort: form.sort,
-      functions: enabledFunctions.map((item: any) => ({
+      functions: currentFunctions.map(item => ({
         pluginId: item.id,
         paramInfo: item.params
       }))
@@ -436,38 +458,40 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
               intentModelId: ''
             }
           })
-          setEabledFunctions([])
+          setCurrentFunctions([])
           wx.showToast({ title: '配置已重置', icon: 'success' })
         }
       }
     })
   }
 
-  // const getFunctionColor = (name: string) => {
-  //   const hash = [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  //   return functionColorMap[hash % functionColorMap.length]
-  // }
+  const getFunctionColor = (name: string) => {
+    const hash = [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    return functionColorMap[hash % functionColorMap.length]
+  }
 
-  // const openFunctionDialog = () => {
-  //   // todo: FunctionDialog暂未完成
-  //   // return null
-  //   if (allFunctions.length === 0) {
-  //     fetchAllFunctions().then(() => setShowFunctionDialog(true))
-  //   } else {
-  //     setShowFunctionDialog(true)
-  //   }
-  // }
+  const openFunctionDialog = () => {
+    // todo: FunctionDialog暂未完成
+    // return null
+    console.log('openFunctionDialog')
+    if (allFunctions.length === 0) {
+      // fetchAllFunctions().then(() => setShowFunctionDialog(true))
+      // pass
+    } else {
+      setShowFunctionDialog(true)
+    }
+  }
 
-  // const handleUpdateFunctions = (selected: any[]) => {
-  //   setEabledFunctions(selected)
-  // }
+  const handleUpdateFunctions = (selected: PorviderPluginFunction[]) => {
+    console.log('handleUpdateFunctions, selected:', selected)
+    setCurrentFunctions(selected)
+    setShowFunctionDialog(false)
+  }
 
-  // const handleDialogClosed = (saved: boolean) => {
-  //   if (!saved) {
-  //     setEabledFunctions(JSON.parse(JSON.stringify(enabledFunctions)))
-  //   }
-  //   setShowFunctionDialog(false)
-  // }
+  const handleDialogClosed = () => {
+    console.log('handleDialogClosed')
+    setShowFunctionDialog(false)
+  }
 
   // 简单的选择器组件
   const SimpleSelect: React.FC<{
@@ -588,9 +612,9 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
                   value={form.summaryMemory}
                   onInput={(e: InputEvent) => handleInputChange('summaryMemory', e.target.value)}
                   placeholder={
-                  form.model.memModelId === 'Memory_mem_local_short'
-                    ? '请输入记忆内容'
-                    : '当前记忆模型不支持编辑'
+                    form.model.memModelId === 'Memory_mem_local_short'
+                      ? '请输入记忆内容'
+                      : '当前记忆模型不支持编辑'
                   }
                   maxLength={2000}
                   disabled={form.model.memModelId !== 'Memory_mem_local_short'}
@@ -612,27 +636,30 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
                     onChange={value => handleModelChange(model.key, value)}
                     placeholder="请选择"
                   />
-
                   {model.type === 'Memory' && form.model.memModelId !== 'Memory_nomem' && (<ChatHistoryRadio value={form.chatHistoryConf} onChange={value => handleInputChange('chatHistoryConf', value)} disabled={form.model.memModelId === 'Memory_nomem'} />)}
+
                   {/* 意图识别功能图标 */}
-                  {/* todo 移除意图识别编辑功能按钮 */}
-                  {/* {model.type === 'Intent' && form.model.intentModelId !== 'Intent_nointent' && (
+                  {model.type === 'Intent' && form.model.intentModelId !== 'Intent_nointent' && (
                     <View className="function-icons">
-                      {enabledFunctions.map((func: any) => (
+                      {/* 编辑功能按钮 */}
+                      <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''} ${isLoading ? 'disable' : ''}`}
+                        onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()}
+                      >
+                        <Text className="edit-btn-text">编辑功能</Text>
+                      </View>
+                      {/* 已启用功能图标 */}
+                      {currentFunctions.map((func: any) => (
                         <View key={func.name}
-                        className="icon-dot"
-                        style={{ backgroundColor: getFunctionColor(func.name) }} >
+                          className="icon-dot"
+                          style={{ backgroundColor: getFunctionColor(func.name) }}
+                        >
                           <Text className="icon-letter">
                             {func.name.charAt(0)}
                           </Text>
                         </View>
                       ))}
-                      <View className={`edit-function-btn ${showFunctionDialog ? 'active-btn' : ''}`}
-                      onTap={() => form.model.intentModelId !== 'Intent_nointent' && openFunctionDialog()} >
-                        <Text className="edit-btn-text">编辑功能</Text>
-                      </View>
                     </View>
-                  )} */}
+                  )}
                 </View>
               </View>
             ))}
@@ -660,13 +687,8 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           </View>
         </View>
 
-        {/* <FunctionDialog
-        show={showFunctionDialog}
-        functions={enabledFunctions}
-        allFunctions={allFunctions}
-        onUpdate={handleUpdateFunctions}
-        onClose={handleDialogClosed}
-      /> */}
+        {/* 编辑功能对话框 */}
+        {isLoading && !showFunctionDialog ? <></> : <FunctionDialog current_functions={currentFunctions} all_functions={allFunctions} onSave={handleUpdateFunctions} onCancel={handleDialogClosed} style={{ display: showFunctionDialog ? 'block' : 'none' }} />}
       </View>
     </LoginRequired>
   )

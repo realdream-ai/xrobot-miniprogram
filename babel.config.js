@@ -3,20 +3,20 @@ module.exports = {
   plugins: [],
   presets: [
     [
-      'remax',
+      "remax",
       {
         typescript: {
-          allowNamespaces: true
+          allowNamespaces: true,
         },
         'class-properties': {
-          loose: false
+          loose: false,
         },
         decorators: {
-          legacy: true
+          legacy: true,
         },
-        'throw-if-namespace': true,
-        targets: ['chrome >= 49', 'firefox >= 64', 'ios >= 8', 'Android > 4.4']
-      }
-    ]
-  ]
-}
+        "throw-if-namespace": true,
+        targets: ["chrome >= 49", "firefox >= 64", "ios >= 8", "Android > 4.4"],
+      },
+    ],
+  ],
+};

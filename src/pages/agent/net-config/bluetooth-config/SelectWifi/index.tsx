@@ -222,7 +222,7 @@ export default function SelectWifi() {
         })
       }
     }
-  }, [selectedDevice]) // 只在设备变化时重新注册
+  }, [selectedDevice, sequenceControl]) // 只在设备变化时重新注册
 
   const getWifiList = useCallback(
     (deviceId: string): Promise<WechatMiniprogram.WifiInfo[]> => new Promise((resolve, reject) => {

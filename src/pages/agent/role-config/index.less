@@ -1,3 +1,5 @@
+@import '~@/pages/common/style.less';
+
 .config-page {
   flex: 1;
   display: flex;
@@ -14,7 +16,7 @@
   display: flex;
   align-items: center;
   gap: 8rpx;
-  color: #979db1;
+  color: @grey-5;
   font-size: 24rpx;
 }
 
@@ -44,7 +46,7 @@
 
 .divider {
   height: 2rpx;
-  background: #e8f0ff;
+  background: @grey-5;
   margin: 20rpx 0;
 }
 
@@ -78,22 +80,22 @@
 .form-input {
   width: 100%;
   height: 88rpx;
-  border: 2rpx solid #dcdfe6;
+  border: 2rpx solid @grey-5;
   border-radius: 12rpx;
   padding: 0 24rpx;
   font-size: 30rpx;
-  background: white;
+  background: @white;
   box-sizing: border-box;
 }
 
 .form-textarea {
   width: 100%;
   height: 240rpx;
-  border: 2rpx solid #dcdfe6;
+  border: 2rpx solid @grey-5;
   border-radius: 12rpx;
   padding: 24rpx;
   font-size: 30rpx;
-  background: white;
+  background: @white;
   resize: none;
   box-sizing: border-box;
 }
@@ -173,7 +175,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24rpx;
-  background: white;
+  background: @white;
   box-sizing: border-box;
 }
 
@@ -203,7 +205,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: @white;
   font-size: 26rpx;
   font-weight: bold;
 }
@@ -219,7 +221,7 @@
 
 .edit-function-btn.active-btn {
   background: #5778ff;
-  color: white;
+  color: @white;
 }
 
 .edit-function-btn.disabled {

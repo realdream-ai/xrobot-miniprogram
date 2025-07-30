@@ -1,209 +1,108 @@
-// import React, { useState, useEffect, useMemo } from 'react'
-// import { View, Text, Button, Input, Checkbox, Textarea } from 'remax/wechat'
-// import './index.less'
+import React, { useState, useCallback, useEffect } from 'react'
+import { View, Button, Text } from 'remax/one'
+import { PorviderPluginFunction, ParamInfo } from '@/pages/common/types'
+import ParamsInput from '../paramsInput'
+import './index.less'
 
-// // Type definitions
-// interface FunctionItem {
-//   id: string;
-//   name: string;
-//   params: { [key: string]: any };
-//   fieldsMeta: FieldMeta[];
-// }
+interface Props {
+  style?: any;
+  all_functions: PorviderPluginFunction[];
+  current_functions: PorviderPluginFunction[];
+  onSave: (updatedFunctions: PorviderPluginFunction[]) => void;
+  onCancel: () => void;
+}
 
-// interface FieldMeta {
-//   key: string;
-//   label: string;
-//   type: string;
-//   default?: any;
-// }
+const FunctionDialog: React.FC<Props> = ({ all_functions, current_functions, onSave, onCancel, style }) => {
+  const [selectedFunctionIds, setSelectedFunctionIds] = useState<string[]>(
+    current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id))
+  )
 
-// interface Props {
-//   show: boolean;
-//   functions: FunctionItem[];
-//   allFunctions: FunctionItem[];
-//   onUpdate: (selected: FunctionItem[]) => void;
-//   onCancel: () => void;
-// }
+  useEffect(() => {
+    setSelectedFunctionIds(current_functions.map(item => item.id).filter(id => all_functions.some(f => f.id === id)))
+  }, [all_functions, current_functions])
 
-// const FunctionDialog: React.FC<Props> = ({ show, functions, allFunctions, onUpdate, onCancel }) => {
-//   const [dialogVisible, setDialogVisible] = useState(show)
-//   const [selectedNames, setSelectedNames] = useState<string[]>([])
-//   const [expandedFunction, setExpandedFunction] = useState<string | null>(null)
-//   const [currentFunction, setCurrentFunction] = useState<FunctionItem | null>(null)
-//   const [modifiedFunctions, setModifiedFunctions] = useState<{ [key: string]: FunctionItem }>({})
-//   const [tempFunctions, setTempFunctions] = useState<{ [key: string]: FunctionItem }>({})
-//   const [textCache, setTextCache] = useState<{ [key: string]: string }>({})
+  const [paramValues, setParamValues] = useState<Record<string, ParamInfo>>(
+    current_functions.reduce((acc, ef) => ({ ...acc, [ef.id]: ef.params }), {})
+  )
 
-//   const selectedList = useMemo(
-//     () => allFunctions.filter(f => selectedNames.includes(f.name)),
-//     [allFunctions, selectedNames]
-//   )
+  const handleParamChange = (pluginId: string, values: ParamInfo) => {
+    console.log('handleParamChange values', values)
+    setParamValues(prev => ({
+      ...prev,
+      [pluginId]: values
+    }))
+  }
 
-//   useEffect(() => {
-//     setDialogVisible(show)
-//     if (show) {
-//       setSelectedNames(functions.map(f => f.name))
-//       setCurrentFunction(selectedList[0] || null)
-//     }
-//   }, [show, functions, selectedList])
+  const handleSave = () => {
+    // todo: 原本存在但后续被移除的func会被在此处被过滤
+    const updatedFunctions = all_functions.filter(
+      // 取出对应原始function
+      func => selectedFunctionIds.some(id => (id === func.id))
+      // 替换params
+    ).map(func => ({
+      ...func,
+      params: paramValues[func.id]
+    }))
+    console.log('save function:', updatedFunctions)
+    onSave(updatedFunctions)
+  }
 
-//   useEffect(() => {
-//     if (currentFunction) {
-//       currentFunction.fieldsMeta.forEach(f => {
-//         const v = currentFunction.params[f.key]
-//         if (f.type === 'array') {
-//           setTextCache(prev => ({
-//             ...prev,
-//             [f.key]: Array.isArray(v) ? v.join('\n') : ''
-//           }))
-//         } else if (f.type === 'json') {
-//           try {
-//             setTextCache(prev => ({
-//               ...prev,
-//               [f.key]: JSON.stringify(v ?? {}, null, 2)
-//             }))
-//           } catch {
-//             setTextCache(prev => ({
-//               ...prev,
-//               [f.key]: ''
-//             }))
-//           }
-//         }
-//       })
-//     }
-//   }, [currentFunction])
+  const toggleFunction = useCallback((funcId: string) => {
+    setSelectedFunctionIds(prev => (prev.includes(funcId) ? prev.filter(id => id !== funcId) : [...prev, funcId]))
+  }, [])
 
-//   const handleFunctionClick = (func: FunctionItem) => {
-//     setSelectedNames(
-//       prev => (prev.includes(func.name) ? prev.filter(name => name !== func.name) : [...prev, func.name])
-//     )
-//   }
+  // todo：滚动穿透问题
+  return (
+    <View style={style}>
+      <View className="function-dialog-overlay" onTouchMove={(e: any) => e.stopPropagation()}>
+        <View className="function-dialog">
+          <Text className="dialog-title">
+            功能配置
+            <Text className="dialog-title-tip">点击功能标题切换开启/关闭</Text>
+          </Text>
+          <View className="function-list">
+            {all_functions.map(func => {
+              const isSelected = selectedFunctionIds.includes(func.id)
+              return (
+                <View
+                  key={func.id}
+                  className={`function-card ${isSelected ? 'selected' : ''}`}
+                  onTap={() => toggleFunction(func.id)}
+                >
+                  <View className="function-card-content">
+                    <View className="function-info">
+                      <Text className="function-name">{func.name}</Text>
+                      {/* <Text className="function-code">{func.providerCode}</Text> */}
+                    </View>
+                    <Text className={`function-status ${isSelected ? 'enabled' : 'disabled'}`}>
+                      {isSelected ? '已开启' : '未开启'}
+                    </Text>
+                  </View>
+                  {isSelected && (
+                    <View className="function-params" onTap={e => e.stopPropagation()}>
+                      <ParamsInput
+                        single_function={func}
+                        current_function={current_functions.find(ef => ef.id === func.id)}
+                        onChange={values => handleParamChange(func.id, values)}
+                      />
+                    </View>
+                  )}
+                </View>
+              )
+            })}
+          </View>
+          <View className="dialog-actions">
+            <Button className="dialog-button cancel" onTap={onCancel}>
+              取消
+            </Button>
+            <Button className="dialog-button save" onTap={handleSave}>
+              保存
+            </Button>
+          </View>
+        </View>
+      </View>
+    </View>
+  )
+}
 
-//   const handleExpandClick = (func: FunctionItem) => {
-//     setExpandedFunction(expandedFunction === func.name ? null : func.name)
-//     setCurrentFunction(func)
-//   }
-
-//   const handleParamChange = (func: FunctionItem, key: string, value: any) => {
-//     if (!tempFunctions[func.name]) {
-//       setTempFunctions(prev => ({ ...prev, [func.name]: JSON.parse(JSON.stringify(func)) }))
-//     }
-//     setTempFunctions(prev => ({
-//       ...prev,
-//       [func.name]: { ...prev[func.name], params: { ...prev[func.name].params, [key]: value } }
-//     }))
-//   }
-
-//   const closeDialog = () => {
-//     setTempFunctions({})
-//     setSelectedNames(functions.map(f => f.name))
-//     setCurrentFunction(null)
-//     setExpandedFunction(null)
-//     setDialogVisible(false)
-//     onCancel()
-//   }
-
-//   const saveSelection = () => {
-//     Object.keys(tempFunctions).forEach(name => {
-//       setModifiedFunctions(prev => ({
-//         ...prev,
-//         [name]: JSON.parse(JSON.stringify(tempFunctions[name]))
-//       }))
-//     })
-//     setTempFunctions({})
-//     const selected = selectedList.map(f => {
-//       const modified = modifiedFunctions[f.name]
-//       return { id: f.id, name: f.name, params: modified ? { ...modified.params } : { ...f.params } }
-//     })
-//     onUpdate(selected as FunctionItem[])
-//     setDialogVisible(false)
-//   }
-
-//   const getFunctionColor = (name: string) => {
-//     const functionColorMap = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#D4A5A5', '#A2836E']
-//     const hash = [...name].reduce((acc, char) => acc + char.charCodeAt(0), 0)
-//     return functionColorMap[hash % functionColorMap.length]
-//   }
-
-//   return (
-//     <View className={`function-dialog ${dialogVisible ? 'visible' : ''}`}>
-//       <View className="custom-header">
-//         <Text className="header-title">功能管理</Text>
-//         <Button className="close-btn" onClick={closeDialog}>×</Button>
-//       </View>
-
-//       <View className="function-list">
-//         {allFunctions.map(func => (
-//           <View key={func.name} className={`function-item ${selectedNames.includes(func.name) ? 'selected' : ''}`}>
-//             <View className="function-content" onClick={() => handleFunctionClick(func)}>
-//               <Checkbox checked={selectedNames.includes(func.name)} />
-//               <View className="function-icon" style={{ backgroundColor: getFunctionColor(func.name) }} />
-//               <Text className="function-name">{func.name}</Text>
-//               <Text
-//                 className={`expand-btn ${expandedFunction === func.name ? 'expanded' : ''}`}
-//                 onClick={_e => {
-//                 //   e.stopPropagation();
-//                   handleExpandClick(func)
-//                 }}
-//               >
-//                 {expandedFunction === func.name ? '收起' : '展开'}
-//               </Text>
-//             </View>
-//             {expandedFunction === func.name && (
-//               <View className="param-forms">
-//                 {func.fieldsMeta.length === 0 ? (
-//                   <Text className="no-params">无需配置参数</Text>
-//               ) : (
-//                   func.fieldsMeta.map(field => (
-//                     <View key={field.key} className="param-item">
-//                       <Text className="param-label">{field.label}</Text>
-//                       {field.type === 'array' ? (
-//                         <Textarea
-//                           value={textCache[field.key] || ''}
-//                           onInput={e => setTextCache(prev => ({ ...prev, [field.key]: e.detail.value }))}
-//                           disabled={!selectedNames.includes(func.name)}
-//                         />
-//                     ) : field.type === 'json' ? (
-//                       <Textarea
-//                         value={textCache[field.key] || ''}
-//                         onInput={e => setTextCache(prev => ({ ...prev, [field.key]: e.detail.value }))}
-//                         disabled={!selectedNames.includes(func.name)}
-//                       />
-//                     ) : field.type === 'number' ? (
-//                       <Input
-//                         type="number"
-//                         value={func.params[field.key]}
-//                         onInput={e => handleParamChange(func, field.key, e.detail.value)}
-//                         disabled={!selectedNames.includes(func.name)}
-//                       />
-//                     ) : field.type === 'boolean' || field.type === 'bool' ? (
-//                       <Checkbox
-//                         checked={func.params[field.key]}
-//                         onChange={(e: any) => handleParamChange(func, field.key, e.target.checked)}
-//                         disabled={!selectedNames.includes(func.name)}
-//                       />
-//                     ) : (
-//                       <Input
-//                         value={func.params[field.key]}
-//                         onInput={e => handleParamChange(func, field.key, e.detail.value)}
-//                         disabled={!selectedNames.includes(func.name)}
-//                       />
-//                     )}
-//                     </View>
-//                   ))
-//               )}
-//               </View>
-//             )}
-//           </View>
-//         ))}
-//       </View>
-
-//       <View className="drawer-footer">
-//         <Button className="footer-btn cancel-btn" onClick={closeDialog}>取消</Button>
-//         <Button className="footer-btn save-btn" onClick={saveSelection}>保存</Button>
-//       </View>
-//     </View>
-//   )
-// }
-
-// export default FunctionDialog
+export default FunctionDialog
