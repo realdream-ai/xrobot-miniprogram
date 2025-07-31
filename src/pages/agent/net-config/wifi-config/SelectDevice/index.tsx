@@ -23,7 +23,7 @@ function dedupeDeviceList(deviceList: WechatMiniprogram.WifiInfo[]): WechatMinip
   return Array.from(deviceMap.values())
 }
 
-const deviceSSIDReg = /^(xiaozhi|xiaoling)/
+const deviceSSIDReg = /^(xiaozhi|xiaoling|yuanling)/
 
 export default function SelectDevice() {
   const { isIOS, currentStep, setCurrentStep, updateSelectedDevice } = useWifiConfigContext()
@@ -60,7 +60,7 @@ export default function SelectDevice() {
 
   return (
     <View className={styles.container} style={{ display: isActive ? 'block' : 'none' }}>
-      <View className={styles.stepTitle}>当前步骤：扫描设备热点（以 Xiaoling 或 Xiaozhi 开头）</View>
+      <View className={styles.stepTitle}>当前步骤：扫描设备热点（以 Xiaoling, Xiaozhi, Yuanling 开头）</View>
       <DeviceList
         isLoading={isLoadingDevices}
         deviceList={deviceList}
@@ -101,20 +101,20 @@ function DeviceList({ isLoading, deviceList, onSelect, isIOS }: DeviceListProps)
         </View>
         <View className={styles.tip}>
           <View className={styles.icon}>2️⃣</View>
-          点击下方按钮扫描设备热点（以 Xiaoling 或 Xiaozhi 开头）
+          点击下方按钮扫描设备热点（以 Xiaoling, Xiaozhi, Yuanling 开头）
         </View>
       </View>
     )
   }
   if (deviceList.length === 0) {
-    return <View className={styles.empty}>未发现 Xiaoling 或 Xiaozhi 设备</View>
+    return <View className={styles.empty}>未发现 Xiaoling, Xiaozhi, Yuanling 设备，请确保设备已通电并处于配网模式</View>
   }
   return (
     <View className={styles.wifiList}>
       <View className={styles.tips}>
         <View className={styles.tip}>
           <View className={styles.icon}>📱</View>
-          已发现 {deviceList.length} 个 Xiaoling 或 Xiaozhi 设备
+          已发现 {deviceList.length} 个 Xiaoling, Xiaozhi, Yuanling 设备
         </View>
         <View className={styles.tip}>
           <View className={styles.icon}>👇</View>

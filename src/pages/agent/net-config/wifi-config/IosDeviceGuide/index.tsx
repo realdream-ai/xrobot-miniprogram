@@ -22,13 +22,13 @@ const IosDeviceGuide: React.FC = () => {
       const connectedWifi = await getConnectedWifi()
 
       if (!connectedWifi) {
-        showToast({ tip: '请连接以 Xiaoling 或 Xiaozhi 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+        showToast({ tip: '请连接以 Xiaoling, Xiaozhi, Yuanling 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
       const { SSID } = connectedWifi
-      if (!SSID || !/^(xiaozhi|xiaoling)/i.test(SSID)) {
-        showToast({ tip: '请连接以 Xiaoling 或 Xiaozhi 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+      if (!SSID || !/^(xiaozhi|xiaoling|yuanling)/i.test(SSID)) {
+        showToast({ tip: '请连接以 Xiaoling, Xiaozhi, Yuanling 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
@@ -78,7 +78,7 @@ const IosDeviceGuide: React.FC = () => {
             <View className="step-desc">
               <View className="important">
                 <View className="important-icon">❗️</View>
-                <View>连接以 Xiaoling 或 Xiaozhi 开头的设备热点</View>
+                <View>连接以 Xiaoling, Xiaozhi, Yuanling 开头的设备热点</View>
               </View>
             </View>
           </View>

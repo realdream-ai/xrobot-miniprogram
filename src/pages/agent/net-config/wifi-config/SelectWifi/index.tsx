@@ -44,8 +44,8 @@ export default observer(function SelectWifi() {
     setIsLoading(true)
     try {
       const wifiInfos = await getWifiList(isIOS)
-      // 过滤掉空 SSID 和 xiaozhi / xiaoling 开头的 SSID 并去重
-      const validWifiList = wifiInfos.filter(item => item.SSID && !/^(xiaozhi|xiaoling)/i.test(item.SSID))
+      // 过滤掉空 SSID 和 xiaozhi / xiaoling / yuanling 开头的 SSID 并去重
+      const validWifiList = wifiInfos.filter(item => item.SSID && !/^(xiaozhi|xiaoling|yuanling)/i.test(item.SSID))
       setWifiList(dedupeWifiList(validWifiList))
     } catch (err) {
       showToast({ tip: '获取 WiFi 列表失败' })

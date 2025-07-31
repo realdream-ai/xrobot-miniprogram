@@ -131,7 +131,7 @@ function DeviceList({ isLoading, deviceList, onSelect }: DeviceListProps) {
     )
   }
   if (deviceList.length === 0) {
-    return <View className={styles.empty}>未发现蓝牙设备</View>
+    return <View className={styles.empty}>未发现蓝牙设备，请确保设备已通电并处于配网模式</View>
   }
   return (
     <View className={styles.deviceList}>
