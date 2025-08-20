@@ -13,7 +13,6 @@ import loadingIcon from '@/pages/common/loading.svg'
 import { getWifiList } from '../wifi'
 import { useWifiConfigContext } from '../context'
 import WifiItem from '../components/WifiItem'
-import { deviceSSIDReg } from '../SelectDevice'
 
 import styles from './index.less'
 
@@ -45,8 +44,8 @@ export default observer(function SelectWifi() {
     setIsLoading(true)
     try {
       const wifiInfos = await getWifiList(isIOS)
-      // 过滤 SSID 并去重
-      const validWifiList = wifiInfos.filter(item => item.SSID && !deviceSSIDReg.test(item.SSID))
+      // 过滤掉空 SSID 和 xiaozhi / xiaoling / yuanling 开头的 SSID 并去重
+      const validWifiList = wifiInfos.filter(item => item.SSID && !/^(xiaozhi|xiaoling|yuanling)/i.test(item.SSID))
       setWifiList(dedupeWifiList(validWifiList))
     } catch (err) {
       showToast({ tip: '获取 WiFi 列表失败' })
