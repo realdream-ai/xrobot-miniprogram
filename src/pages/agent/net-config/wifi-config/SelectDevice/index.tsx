@@ -1,131 +1,126 @@
-import React, { useCallback, useState } from "react";
-import { View } from "remax/one";
+import React, { useCallback, useState } from 'react'
+import { View } from 'remax/one'
 
-import { useToast } from "@/utils/toast";
-import { getWifiList } from "../wifi";
-import { useWifiConfigContext } from "../context";
-import WifiItem from "../components/WifiItem";
+import { useToast } from '@/utils/toast'
+import { showModal, showToast as wxShowToast } from 'remax/wechat'
+import Button from '@/ui/Button'
+import { getWifiList } from '../wifi'
+import { useWifiConfigContext } from '../context'
+import WifiItem from '../components/WifiItem'
 
-import styles from "./index.less";
-import { showModal, showToast as wxShowToast } from "remax/wechat";
-import Button from "@/ui/Button";
+import styles from './index.less'
 
 // 对设备列表去重，保留信号最强的
 function dedupeDeviceList(
   deviceList: WechatMiniprogram.WifiInfo[]
 ): WechatMiniprogram.WifiInfo[] {
-  const deviceMap = new Map<string, WechatMiniprogram.WifiInfo>();
+  const deviceMap = new Map<string, WechatMiniprogram.WifiInfo>()
 
-  deviceList.forEach((device) => {
-    const existingDevice = deviceMap.get(device.SSID);
+  deviceList.forEach(device => {
+    const existingDevice = deviceMap.get(device.SSID)
     // 如果是新的 SSID 或者信号比已存在的强，则更新
     if (
-      !existingDevice ||
-      device.signalStrength > existingDevice.signalStrength
+      !existingDevice
+      || device.signalStrength > existingDevice.signalStrength
     ) {
-      deviceMap.set(device.SSID, device);
+      deviceMap.set(device.SSID, device)
     }
-  });
+  })
 
-  return Array.from(deviceMap.values());
+  return Array.from(deviceMap.values())
 }
 
-export const deviceSSIDReg = /^(xiaozhi|xiaoling|yuanling|zuowei)/;
+export const deviceSSIDReg = /^(xiaozhi|xiaoling|yuanling|zuowei)/
 
 export default function SelectDevice() {
-  const { isIOS, currentStep, setCurrentStep, updateSelectedDevice } =
-    useWifiConfigContext();
-  const isActive = currentStep === "select-device";
-  const showToast = useToast();
-  const [isLoadingDevices, setIsLoadingDevices] = useState(false);
-  const [customPrefix, setCustomPrefix] = useState<string | null>(null);
+  const { isIOS, currentStep, setCurrentStep, updateSelectedDevice } = useWifiConfigContext()
+  const isActive = currentStep === 'select-device'
+  const showToast = useToast()
+  const [isLoadingDevices, setIsLoadingDevices] = useState(false)
+  const [customPrefix, setCustomPrefix] = useState<string | null>(null)
   const [deviceList, setDeviceList] = useState<
     WechatMiniprogram.WifiInfo[] | null
-  >(null);
+  >(null)
 
   const startDeviceScan = useCallback(async () => {
-    setDeviceList(null);
-    setIsLoadingDevices(true);
+    setDeviceList(null)
+    setIsLoadingDevices(true)
     try {
-      const systemSetting = wx.getSystemSetting();
+      const systemSetting = wx.getSystemSetting()
       if (!systemSetting.wifiEnabled) {
-        showToast({ tip: "WiFi未打开，请先打开WiFi", duration: 2000 });
-        return;
+        showToast({ tip: 'WiFi未打开，请先打开WiFi', duration: 2000 })
+        return
       }
-      const wifiList = await getWifiList(isIOS, true);
+      const wifiList = await getWifiList(isIOS, true)
       // 过滤设备热点并去重
       if (customPrefix) {
-        const validDeviceList = wifiList.filter((item) =>
-          item.SSID.toLowerCase().startsWith(customPrefix)
-        );
-        setDeviceList(dedupeDeviceList(validDeviceList));
+        const validDeviceList = wifiList.filter(item => item.SSID.toLowerCase().startsWith(customPrefix))
+        setDeviceList(dedupeDeviceList(validDeviceList))
       } else {
-        const validDeviceList = wifiList.filter((item) =>
-          deviceSSIDReg.test(item.SSID.toLowerCase())
-        );
-        setDeviceList(dedupeDeviceList(validDeviceList));
+        const validDeviceList = wifiList.filter(item => deviceSSIDReg.test(item.SSID.toLowerCase()))
+        setDeviceList(dedupeDeviceList(validDeviceList))
       }
     } catch (err) {
-      showToast({ tip: "获取设备列表失败" });
-      setDeviceList([]);
+      showToast({ tip: '获取设备列表失败' })
+      setDeviceList([])
     } finally {
-      setIsLoadingDevices(false);
+      setIsLoadingDevices(false)
     }
-  }, [showToast, isIOS, customPrefix]);
+  }, [showToast, isIOS, customPrefix])
 
   const handleSelectDevice = useCallback(
     (device: WechatMiniprogram.WifiInfo) => {
-      updateSelectedDevice({ wifi: device, connected: false });
-      setCurrentStep("connect-device");
+      updateSelectedDevice({ wifi: device, connected: false })
+      setCurrentStep('connect-device')
     },
     [updateSelectedDevice, setCurrentStep]
-  );
+  )
 
   const handleCustomPrefix = () => {
     showModal({
-      title: "自定义wifi名称过滤前缀",
-      content: "",
+      title: '自定义wifi名称过滤前缀',
+      content: '',
       editable: true,
-      placeholderText: "请输入前缀，最少3字符",
-      confirmText: "确定",
-      cancelText: "取消",
-      success: (res) => {
+      placeholderText: '请输入前缀，最少3字符',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: res => {
         if (res.confirm && res.content) {
-          const name = res.content.trim().toLowerCase();
+          const name = res.content.trim().toLowerCase()
           if (!name) {
             wxShowToast({
-              title: "前缀不能为空",
-              icon: "error",
-              duration: 3000,
-            });
-            return;
+              title: '前缀不能为空',
+              icon: 'error',
+              duration: 3000
+            })
+            return
           }
           if (name.length < 3) {
-            wxShowToast({ title: "前缀过短", icon: "error", duration: 3000 });
-            return;
+            wxShowToast({ title: '前缀过短', icon: 'error', duration: 3000 })
+            return
           }
           if (name.length > 20) {
-            wxShowToast({ title: "前缀过长", icon: "error", duration: 3000 });
-            return;
+            wxShowToast({ title: '前缀过长', icon: 'error', duration: 3000 })
+            return
           }
           // onCreate(name)
-          setCustomPrefix(name);
-          wxShowToast({ title: "已设置", icon: "success", duration: 2000 });
+          setCustomPrefix(name)
+          wxShowToast({ title: '已设置', icon: 'success', duration: 2000 })
         }
         // onClose()
-      },
-    });
-  };
+      }
+    })
+  }
 
   const handleClearCustomPrefix = () => {
-    setCustomPrefix(null);
-    wxShowToast({ title: "已清除", icon: "success", duration: 2000 });
-  };
+    setCustomPrefix(null)
+    wxShowToast({ title: '已清除', icon: 'success', duration: 2000 })
+  }
 
   return (
     <View
       className={styles.container}
-      style={{ display: isActive ? "block" : "none" }}
+      style={{ display: isActive ? 'block' : 'none' }}
     >
       <View className={styles.stepTitle}>当前步骤：扫描设备热点</View>
 
@@ -137,7 +132,7 @@ export default function SelectDevice() {
       />
       {!isLoadingDevices && (
         <View className={styles.actionBtn} onTap={startDeviceScan}>
-          {deviceList == null ? "🔍 开始扫描" : "🔍 重新扫描"}
+          {deviceList == null ? '🔍 开始扫描' : '🔍 重新扫描'}
         </View>
       )}
 
@@ -149,21 +144,21 @@ export default function SelectDevice() {
           <Button
             onTap={handleCustomPrefix}
             className={styles.actionBtn}
-            mode={"default"}
+            mode="default"
           >
             自定义WiFi名称过滤前缀
           </Button>
           <Button
             onTap={handleClearCustomPrefix}
             className={styles.actionBtn}
-            mode={"default"}
+            mode="default"
           >
             清除自定义前缀
           </Button>
         </View>
       )}
     </View>
-  );
+  )
 }
 
 interface DeviceListProps {
@@ -177,7 +172,7 @@ function DeviceList({
   isLoading,
   deviceList,
   onSelect,
-  isIOS,
+  isIOS
 }: DeviceListProps) {
   if (isLoading) {
     return (
@@ -185,7 +180,7 @@ function DeviceList({
         <View className={styles.loadingIcon} />
         <View className={styles.loadingText}>正在扫描设备热点...</View>
       </View>
-    );
+    )
   }
   if (deviceList == null) {
     return (
@@ -199,14 +194,14 @@ function DeviceList({
           点击下方按钮扫描设备热点
         </View>
       </View>
-    );
+    )
   }
   if (deviceList.length === 0) {
     return (
       <View className={styles.empty}>
         未发现设备，请确保设备已通电并处于配网模式
       </View>
-    );
+    )
   }
   return (
     <View className={styles.wifiList}>
@@ -229,5 +224,5 @@ function DeviceList({
         />
       ))}
     </View>
-  );
+  )
 }
