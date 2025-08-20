@@ -5,6 +5,7 @@ import { getConnectedWifi } from '../wifi'
 import { useWifiConfigContext } from '../context'
 import './index.less'
 import './style.less'
+import { deviceSSIDReg } from '../SelectDevice'
 
 // 使用图片链接
 const GUIDE_IMAGES = {
@@ -22,13 +23,13 @@ const IosDeviceGuide: React.FC = () => {
       const connectedWifi = await getConnectedWifi()
 
       if (!connectedWifi) {
-        showToast({ tip: '请连接以 Xiaoling 或 Xiaozhi 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
       const { SSID } = connectedWifi
-      if (!SSID || !/^(xiaozhi|xiaoling)/i.test(SSID)) {
-        showToast({ tip: '请连接以 Xiaoling 或 Xiaozhi 开头的设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+      if (!SSID || !deviceSSIDReg.test(SSID)) {
+        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
@@ -78,7 +79,7 @@ const IosDeviceGuide: React.FC = () => {
             <View className="step-desc">
               <View className="important">
                 <View className="important-icon">❗️</View>
-                <View>连接以 Xiaoling 或 Xiaozhi 开头的设备热点</View>
+                <View>连接设备热点</View>
               </View>
             </View>
           </View>

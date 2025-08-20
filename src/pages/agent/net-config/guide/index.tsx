@@ -51,7 +51,7 @@ function Steps() {
         '确保设备已通电',
         '设备处于配网模式',
         isIOS
-          ? '如果是 WiFi 配网，请手动连接到 Xiaoling 或 Xiaozhi 开头的设备热点'
+          ? '如果是 WiFi 配网，请手动连接到 Xiaoling, Xiaozhi, Yuanling, Zuowei 开头的设备热点'
           : '扫描设备'
       ]
     },
