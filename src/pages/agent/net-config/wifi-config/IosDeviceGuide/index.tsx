@@ -23,13 +23,13 @@ const IosDeviceGuide: React.FC = () => {
       const connectedWifi = await getConnectedWifi()
 
       if (!connectedWifi) {
-        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+        showToast({ tip: `请连接${deviceSSIDReg.source}开头的设备热点`, icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
       const { SSID } = connectedWifi
       if (!SSID || !deviceSSIDReg.test(SSID)) {
-        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+        showToast({ tip: `请连接${deviceSSIDReg.source}开头的设备热点`, icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
 
@@ -79,7 +79,7 @@ const IosDeviceGuide: React.FC = () => {
             <View className="step-desc">
               <View className="important">
                 <View className="important-icon">❗️</View>
-                <View>连接设备热点</View>
+                <View>连接设备热点: (以{deviceSSIDReg.source}开头的设备)</View>
               </View>
             </View>
           </View>
