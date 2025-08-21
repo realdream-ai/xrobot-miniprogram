@@ -5,7 +5,7 @@ import { getConnectedWifi } from '../wifi'
 import { useWifiConfigContext } from '../context'
 import './index.less'
 import './style.less'
-import { deviceSSIDReg } from '../SelectDevice'
+// import { deviceSSIDReg } from '../SelectDevice'
 
 // 使用图片链接
 const GUIDE_IMAGES = {
@@ -23,15 +23,19 @@ const IosDeviceGuide: React.FC = () => {
       const connectedWifi = await getConnectedWifi()
 
       if (!connectedWifi) {
-        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+        showToast({
+          tip: '请连接设备热点',
+          icon: 'warning',
+          duration: 3500,
+          className: 'wifi-config-toast'
+        })
         return
       }
-
-      const { SSID } = connectedWifi
-      if (!SSID || !deviceSSIDReg.test(SSID)) {
-        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
-        return
-      }
+      // const { SSID } = connectedWifi
+      // if (!SSID || !deviceSSIDReg.test(SSID)) {
+      //   showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+      //   return
+      // }
 
       // 更新选中的设备信息
       updateSelectedDevice({
@@ -64,7 +68,11 @@ const IosDeviceGuide: React.FC = () => {
             <View className="step-title">打开系统设置</View>
           </View>
           <View className="step-content">
-            <Image className="guide-image" src={GUIDE_IMAGES.settings} mode="aspectFit" />
+            <Image
+              className="guide-image"
+              src={GUIDE_IMAGES.settings}
+              mode="aspectFit"
+            />
             <View className="step-desc">点击「无线局域网」进入 WiFi 设置</View>
           </View>
         </View>
@@ -75,7 +83,11 @@ const IosDeviceGuide: React.FC = () => {
             <View className="step-title">连接设备热点</View>
           </View>
           <View className="step-content">
-            <Image className="guide-image" src={GUIDE_IMAGES.wifi} mode="aspectFit" />
+            <Image
+              className="guide-image"
+              src={GUIDE_IMAGES.wifi}
+              mode="aspectFit"
+            />
             <View className="step-desc">
               <View className="important">
                 <View className="important-icon">❗️</View>
@@ -102,7 +114,9 @@ const IosDeviceGuide: React.FC = () => {
       </View>
 
       <View className="guide-buttons">
-        <View className="btn confirm" onTap={handleConfirm}>已连接，继续配网</View>
+        <View className="btn confirm" onTap={handleConfirm}>
+          已连接，继续配网
+        </View>
       </View>
     </View>
   )
