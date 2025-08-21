@@ -161,10 +161,10 @@ export default function SelectDevice() {
 }
 
 interface DeviceListProps {
-  isLoading: boolean;
-  deviceList: WechatMiniprogram.WifiInfo[] | null;
-  onSelect(device: WechatMiniprogram.WifiInfo): void;
-  isIOS: boolean;
+  isLoading: boolean
+  deviceList: WechatMiniprogram.WifiInfo[] | null
+  onSelect(device: WechatMiniprogram.WifiInfo): void
+  isIOS: boolean
 }
 
 function DeviceList({
