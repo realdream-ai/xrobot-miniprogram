@@ -26,12 +26,11 @@ const IosDeviceGuide: React.FC = () => {
         showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
         return
       }
-
-      const { SSID } = connectedWifi
-      if (!SSID || !deviceSSIDReg.test(SSID)) {
-        showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
-        return
-      }
+      // const { SSID } = connectedWifi
+      // if (!SSID || !deviceSSIDReg.test(SSID)) {
+      //   showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
+      //   return
+      // }
 
       // 更新选中的设备信息
       updateSelectedDevice({
