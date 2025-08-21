@@ -103,7 +103,6 @@ export default function SelectDevice() {
             wxShowToast({ title: '前缀过长', icon: 'error', duration: 3000 })
             return
           }
-          // onCreate(name)
           setCustomPrefix(name)
           wxShowToast({ title: '已设置', icon: 'success', duration: 2000 })
         }
