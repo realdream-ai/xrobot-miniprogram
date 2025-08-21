@@ -31,7 +31,6 @@ const IosDeviceGuide: React.FC = () => {
         })
         return
       }
-
       // const { SSID } = connectedWifi
       // if (!SSID || !deviceSSIDReg.test(SSID)) {
       //   showToast({ tip: '请连接设备热点', icon: 'warning', duration: 3500, className: 'wifi-config-toast' })
