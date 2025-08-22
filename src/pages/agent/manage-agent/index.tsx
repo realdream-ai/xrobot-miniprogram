@@ -19,21 +19,12 @@ export default function ManageAgent() {
   const [isLoading, setIsLoading] = useState(false)
   const [createDialogVisible, setCreateDialogVisible] = useState(false)
   const [agents, setAgents] = useState<Agent[]>([])
-  const isMountedRef = useRef(true)
-
-  // 在组件卸载时设置标志
-  useEffect(() => () => {
-    isMountedRef.current = false
-  }, [])
 
   const fetchAgentList = () => {
     console.log('fetch agentlist')
-    if (!isMountedRef.current) return
     setIsLoading(true)
     showLoading({ title: '加载中...' })
     api.agent.getAgentList(res => {
-      if (!isMountedRef.current) return // 检查组件是否仍然挂载
-
       if (res.code === 401) {
         hideLoading()
         setIsLoading(false)
@@ -53,15 +44,13 @@ export default function ManageAgent() {
   }
 
   const loadData = useCallback(() => {
-    if (isLoading || !isMountedRef.current) return
+    if (isLoading) return
 
     setIsLoading(true)
     showLoading({ title: '加载中...' })
     // 先获取qinfo中的token
     api.qApi.fetchQInfo(
       res => {
-        if (!isMountedRef.current) return // 检查组件是否仍然挂载
-
         if (res.code === 500) {
           showToast({ title: '服务器异常', icon: 'error' })
         } else if (res.code === 0) {
@@ -75,11 +64,14 @@ export default function ManageAgent() {
         }
       },
       () => {
-        if (!isMountedRef.current) return // 检查组件是否仍然挂载
         setIsLoading(false)
         hideLoading()
       }
     )
+    // 这里会在fetch qinfo还未得到响应结果时就设置加载结束，
+    // 应该修改fetch qinfo api 的参数添加一个 finallyCallback来设置加载结束
+    // setIsLoading(false)
+    // hideLoading()
   }, [isLoading])
 
   const hasLoadedRef = useRef(false)
