@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { usePageEvent } from 'remax/macro'
-import { View, Button } from 'remax/one'
+import { View, Button as WxButton } from 'remax/one'
+import Button from '@/ui/Button'
 import {
   showModal,
   showToast,
@@ -267,13 +268,13 @@ const VoiceClonePage = () => {
 
         {/* 创建音色按钮 */}
         <View className="create-btn-wrapper">
-          <Button
+          <WxButton
             className="create-btn"
             onTap={handleCreateVoice}
             type="submit"
           >
             创建音色
-          </Button>
+          </WxButton>
         </View>
       </LoginRequired>
     </Scaffold>
