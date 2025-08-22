@@ -145,10 +145,11 @@ export default function ManageAgent() {
   return (
     <Scaffold appBar={<AppBar title={nameMap[Pages.XrobotManageAgent]} />}>
       <LoginRequired
+        autoRedirect={false}
         noLoginView={
           <View className="col-container">
             <View className="alert-text alert-text__bold">未登录</View>
-            <View className="alert-text">将自动跳转登录页，或点击直接前往</View>
+            <View className="alert-text">请登录后使用</View>
             <Button
               className={styles.footerButton}
               mode="primary"
