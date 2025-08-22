@@ -139,7 +139,8 @@ export default {
    */
   listVoiceClones(
     callback: (res: ApiResponse<{ voices: Voice[] }>) => void,
-    failCallback?: (err: Error) => void
+    failCallback?: (err: Error) => void,
+    finalCallback?: () => void
   ) {
     RequestService.sendRequest()
       .url(`${baseUrl}/v1/voice-clones`)
@@ -156,6 +157,9 @@ export default {
         RequestService.reAjaxFun(() => {
           this.listVoiceClones(callback, failCallback)
         })
+      })
+      .finalCallback(() => {
+        if (finalCallback) finalCallback()
       })
       .send()
   },

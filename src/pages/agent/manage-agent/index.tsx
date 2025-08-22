@@ -8,6 +8,7 @@ import AppBar from '@/components/AppBar'
 import { Pages, nameMap, routeMap } from '@/constants/route'
 import LoginRequired from '@/components/LoginRequired'
 import Scaffold from '@/components/Scaffold'
+import store from '@/stores'
 import CreateAgentDialog from './components/AgentAdder/index'
 import AgentCard from './components/AgentCard'
 import styles from './index.less'
@@ -50,12 +51,15 @@ export default function ManageAgent() {
     // 先获取qinfo中的token
     api.qApi.fetchQInfo(
       res => {
-        if (res.code === 0) {
+        if (res.code === 500) {
+          showToast({ title: '服务器异常', icon: 'error' })
+        } else if (res.code === 0) {
           fetchAgentList()
         } else if (res.code === 401) {
           hideLoading()
           setIsLoading(false)
           // todo sso登录失效，获取token失败
+          store.clearAuth()
           showToast({ title: '登录失效', icon: 'error' })
         }
       },
@@ -141,17 +145,25 @@ export default function ManageAgent() {
   return (
     <Scaffold appBar={<AppBar title={nameMap[Pages.XrobotManageAgent]} />}>
       <LoginRequired
+        autoRedirect={false}
         noLoginView={
           <View className="col-container">
-            <View className="alert-text alert-text__bold" >未登录</View>
-            <View className="alert-text">将自动跳转登录页，或点击直接前往</View>
+            <View className="alert-text alert-text__bold">未登录</View>
+            <View className="alert-text">请登录后使用</View>
             <Button
               className={styles.footerButton}
               mode="primary"
               onTap={() => {
                 // 这里需要把 routeMap[Pages.XrobotManageAgent] 删除最前面的'/'
-                const originUrl = routeMap[Pages.XrobotManageAgent].replace('/', '')
-                navigateTo({ url: `${routeMap[Pages.XrobotAccountLogin]}?sourceUrl=${encodeURIComponent(originUrl)}` })
+                const originUrl = routeMap[Pages.XrobotManageAgent].replace(
+                  '/',
+                  ''
+                )
+                navigateTo({
+                  url: `${
+                    routeMap[Pages.XrobotAccountLogin]
+                  }?sourceUrl=${encodeURIComponent(originUrl)}`
+                })
               }}
             >
               登录

@@ -5,7 +5,9 @@
 
 function must(name: string, variable?: string): string {
   if (variable == null) {
-    throw new Error(`Invalid value for environment variable ${name}, you need to configure it in env file`)
+    throw new Error(
+      `Invalid value for environment variable ${name}, you need to configure it in env file`
+    )
   }
   return variable
 }
@@ -17,5 +19,11 @@ export const apiHost = must('apiHost', process.env.REMAX_APP_API_HOST)
 
 // 运行平台相关常量
 export const platform = must('platform', process.env.REMAX_PLATFORM)
+
+// 登录小程序的appId
+export const loginMpAppId = must(
+  'loginMpAppId',
+  process.env.REMAX_APP_LOGIN_MP_APPID
+)
 
 export const isWechat = platform === 'wechat'

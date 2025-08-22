@@ -4,7 +4,7 @@ import { nameMap, Pages, routeMap } from '@/constants/route'
 import React, { useState, useMemo } from 'react'
 import { View, Text, navigateTo } from 'remax/one'
 import { usePageEvent } from 'remax/macro'
-import { ScrollView, showToast } from 'remax/wechat'
+import { hideToast, ScrollView, showToast } from 'remax/wechat'
 import api from '@/apis/api'
 import store from '@/stores'
 import { AgentTemplate } from '@/pages/agent/manage-agent/types'
@@ -16,11 +16,27 @@ import TemplateCard from './components/TemplateCard'
 import { Template } from './types'
 import './index.less'
 
-function fetchAllTemplates(callback: (data: { template: Template[] },) => void, failcallback: (res: any) => void) {
+function fetchAllTemplates(
+  callback: (data: { template: Template[] }) => void,
+  failcallback: (res: any) => void
+) {
   console.log('fetchAllTemplates')
-  fetch('https://xrobot-storage.qnaigc.com/xrobot-mp/agent-square-template.json')
-    .then(res => { callback(res) })
-    .catch(res => { failcallback(res) })
+  fetch(
+    'https://xrobot-storage.qnaigc.com/xrobot-mp/agent-square-template.json'
+  )
+    .then(res => {
+      callback(res)
+    })
+    .catch(res => {
+      failcallback(res)
+    })
+}
+
+function loginCheck() {
+  if (store.getCookie() !== '') {
+    return false
+  }
+  return true
 }
 
 export default function Square() {
@@ -33,13 +49,16 @@ export default function Square() {
     if (isLoading) return
     setIsLoading(true)
 
-    fetchAllTemplates(res => {
-      setTemplates(res.template)
-      setIsLoading(false)
-    }, res => {
-      console.error('获取模板失败：', res)
-      showToast({ title: '获取模板失败', icon: 'error', duration: 2000 })
-    })
+    fetchAllTemplates(
+      res => {
+        setTemplates(res.template)
+        setIsLoading(false)
+      },
+      res => {
+        console.error('获取模板失败：', res)
+        showToast({ title: '获取模板失败', icon: 'error', duration: 2000 })
+      }
+    )
   }
 
   usePageEvent('onLoad', loadData)
@@ -101,9 +120,14 @@ export default function Square() {
 
     // 根据搜索文本过滤 ==> 搜索范围包含系统提示词、名称、标签
     if (searchText.trim()) {
-      filtered = filtered.filter(template => template.agentName.toLowerCase().includes(searchText.toLowerCase())
-        || (template.systemPrompt && template.systemPrompt.toLowerCase().includes(searchText.toLowerCase()))
-        || template.tags.some(tag => tag.toLowerCase().includes(searchText.toLowerCase())))
+      filtered = filtered.filter(
+        template => template.agentName.toLowerCase().includes(searchText.toLowerCase())
+          || (template.systemPrompt
+            && template.systemPrompt
+              .toLowerCase()
+              .includes(searchText.toLowerCase()))
+          || template.tags.some(tag => tag.toLowerCase().includes(searchText.toLowerCase()))
+      )
     }
 
     // 根据标签过滤
@@ -143,10 +167,13 @@ export default function Square() {
       },
       () => setIsLoading(false)
     )
-
   }
 
-  const updateAgent = (agentId: string, template: AgentTemplate, callback: (res: any) => void) => {
+  const updateAgent = (
+    agentId: string,
+    template: AgentTemplate,
+    callback: (res: any) => void
+  ) => {
     // const configData = {
     //   ...template
     //   // functions: enabledFunctions.map((item: any) => ({
@@ -159,18 +186,27 @@ export default function Square() {
 
   // todo: 添加智能体时会刷新/重新拉取数据
   const handleAddAgentWithTemplate = (template: Template) => {
+    if (loginCheck()) {
+      showToast({ title: '未登录', icon: 'error' })
+      return
+    }
     console.log('添加模板:', template.agentName)
-    showToast({ title: `添加模板: ${template.agentName}` })
+    showToast({ title: `添加模板: ${template.agentName}`, icon: 'loading' })
 
     // 实现添加模板的逻辑
     // 1. 添加一个新的agent，并拿到agentId
     addAgent(template.agentName, (res1: any) => {
-      if (res1.code === 0) {
+      if (res1.code === 401) {
+        hideToast()
+        wx.showToast({ title: '未登录', icon: 'error' })
+      } else if (res1.code === 0) {
         // 2. 对新agent使用template更新配置
         // todo： 检查template
         updateAgent(res1.data, template as AgentTemplate, res2 => {
           if (res2.code === 0) {
             wx.showToast({ title: '添加成功', icon: 'success' })
+          } else if (res1.code === 401) {
+            return wx.showToast({ title: '未登录', icon: 'error' })
           } else {
             wx.showToast({ title: res2.msg || '添加失败', icon: 'error' })
           }
@@ -201,20 +237,24 @@ export default function Square() {
             <View className="loading">
               <Text>加载中...</Text>
             </View>
-          ) : <>{filteredTemplates.length > 0 ? (
-            filteredTemplates.map(template => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                onAdd={handleAddAgentWithTemplate}
-                onTap={handleTemplateCardClick}
-              />
-            ))
           ) : (
-            <View className="empty">
-              <Text>暂无相关模板</Text>
-            </View>
-          )}</>}
+            <>
+              {filteredTemplates.length > 0 ? (
+                filteredTemplates.map(template => (
+                  <TemplateCard
+                    key={template.id}
+                    template={template}
+                    onAdd={handleAddAgentWithTemplate}
+                    onTap={handleTemplateCardClick}
+                  />
+                ))
+              ) : (
+                <View className="empty">
+                  <Text>暂无相关模板</Text>
+                </View>
+              )}
+            </>
+          )}
         </View>
       </ScrollView>
     </Scaffold>
