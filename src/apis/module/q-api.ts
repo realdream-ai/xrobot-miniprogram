@@ -10,12 +10,14 @@ import { navigateTo } from 'remax/one'
 
 export default {
   getQInfo(cookie: string, token?: string): Promise<any> {
+    // console.log('getQInfo', cookie, token)
+
     return fetch(
       `${apiHost}/api/proxy/portal-v4/api/xrobot-proxy/manager/xiaozhi/user/q-info`,
       {
         header: {
           Cookie: cookie,
-          'X-Robot-Auth-Token': 'Bearer ' + (token ?? '')
+          'X-Robot-Auth-Token': 'Bearer ' + token
         }
       }
     )
@@ -40,8 +42,14 @@ export default {
   /// 若不给出callback函数，则默认将在401时跳转登录页面
   ///
   /// 给出callback时，会先保存token到store再执行回调
-  fetchQInfo(callback?: (res: {code: number, data: {token: string}, msg: string}) => void,
-    finallyCallback?: () => void) {
+  fetchQInfo(
+    callback?: (res: {
+      code: number;
+      data: { token: string };
+      msg: string;
+    }) => void,
+    finallyCallback?: () => void
+  ) {
     const cookie = store.getCookie()
     console.log('try fetch q info')
     this.getQInfo(cookie)
@@ -57,7 +65,6 @@ export default {
           showToast({ title: '请登录' })
           store.clearAuth()
           navigateTo({ url: toLoginPageUrl() })
-
         }
       })
       .catch(e => {
