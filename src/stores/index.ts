@@ -43,7 +43,12 @@ const state: State = {
   currentSquareDetailTemplate: null
 }
 
-const CACHE_KEYS = ['xrobot-token', 'xrobot-cookie', 'xrobot-userInfo', 'xrobot-pubConfig']
+const CACHE_KEYS = [
+  'xrobot-token',
+  'xrobot-cookie',
+  'xrobot-userInfo',
+  'xrobot-pubConfig'
+]
 
 const store = {
   getToken() {
@@ -86,9 +91,12 @@ const store = {
     state.currentSquareDetailTemplate = null
     return temp
   },
-  updateCookie(cookie: string) {
+  updateCookie(cookie: string, needTransform = true) {
     if (!cookie) return
-    const trasformedCookie = transformCookieToWeb(cookie)
+    let trasformedCookie = cookie
+    if (needTransform) {
+      trasformedCookie = transformCookieToWeb(cookie)
+    }
     if (!trasformedCookie) return
 
     const oldCookie = store.getCookie()

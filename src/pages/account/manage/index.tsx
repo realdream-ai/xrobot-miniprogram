@@ -28,8 +28,19 @@ export default function MineAccManage() {
   const { statusBarHeight, appBarHeight, bottomSafeAreaHeight } = useSystemInfo()
 
   return (
-    <Scaffold appBar={<AppBar title={nameMap.xrobot_acc_manage} leading={<BackLeading />} />}>
-      <View className={styles.wrapper} style={{ height: `calc(100vh - ${appBarHeight + statusBarHeight + bottomSafeAreaHeight}px)` }}>
+    <Scaffold
+      appBar={
+        <AppBar title={nameMap.xrobot_acc_manage} leading={<BackLeading />} />
+      }
+    >
+      <View
+        className={styles.wrapper}
+        style={{
+          height: `calc(100vh - ${
+            appBarHeight + statusBarHeight + bottomSafeAreaHeight
+          }px)`
+        }}
+      >
         <View className={styles.info}>
           <View className={styles.title}>基本信息</View>
           <Cells />
@@ -52,7 +63,7 @@ function Cells() {
 
   usePageEvent('onShow', () => {
     if (store.getCookie() === '') {
-      showToast({ tip: '您已退出登录', icon: 'warning' })
+      showToast({ tip: '未登录', icon: 'warning' })
       switchTab({ url: routeMap[Pages.XrobotManageAgent] })
     }
   })
@@ -73,27 +84,17 @@ function SignoutBtn() {
   const [popupShow, setPopupShow] = useState(false)
   return (
     <>
-      <View
-        className={styles.signoutBtn}
-        onTap={() => setPopupShow(true)}
-      >
+      <View className={styles.signoutBtn} onTap={() => setPopupShow(true)}>
         退出登录
       </View>
-      <Popup
-        className={styles.popupBody}
-        open={popupShow}
-        position="bottom"
-      >
+      <Popup className={styles.popupBody} open={popupShow} position="bottom">
         <View
           className={cls(styles.popupBtn, styles.confirm)}
           onTap={handleSignout}
         >
           确定退出
         </View>
-        <View
-          className={styles.popupBtn}
-          onTap={() => setPopupShow(false)}
-        >
+        <View className={styles.popupBtn} onTap={() => setPopupShow(false)}>
           取消
         </View>
       </Popup>

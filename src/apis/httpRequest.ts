@@ -27,6 +27,7 @@ function sendRequest() {
     _sucCallback: null as ((res: Response) => void) | null,
     _failCallback: undefined as ((e: Error) => void) | undefined,
     _networkFailCallback: undefined as ((e: Error) => void) | undefined,
+    _finalCallback: undefined as (() => void) | undefined,
     _method: 'GET' as string,
     _data: {} as any,
     _header: {
@@ -43,7 +44,6 @@ function sendRequest() {
       const token = store.getToken()
       if (isNotNull(token)) {
         this._header.Authorization = 'Bearer ' + token
-        // todo 考虑删除该字段
         this._header['X-Robot-Auth-Token'] = 'Bearer ' + token
       }
 
@@ -83,6 +83,11 @@ function sendRequest() {
           // 打印失败响应
           httpHandlerError(res, this._failCallback, this._networkFailCallback)
         })
+        .finally(() => {
+          if (this._finalCallback) {
+            this._finalCallback()
+          }
+        })
       return this
     },
     success(callback: (res: Response) => void) {
@@ -95,6 +100,10 @@ function sendRequest() {
     },
     networkFail(callback: (res: any) => void) {
       this._networkFailCallback = callback
+      return this
+    },
+    finalCallback(callback: () => void) {
+      this._finalCallback = callback
       return this
     },
     url(url: string) {
