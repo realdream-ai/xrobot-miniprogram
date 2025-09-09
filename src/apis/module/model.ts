@@ -138,14 +138,14 @@ export default {
   // todo: qiniu服务器api与开源接口差异 - 接口路径不同
   // 获取模型音色列表
   getModelVoices(
-    modelId: string,
+    // modelId: string,
     // voiceName?: string,
     callback: (res: any) => void
   ) {
     RequestService.sendRequest()
       .url(
         // `${getServiceUrl()}/models/${modelId}/voices?voiceName=${voiceName || ''}`
-        `${host}/v1/models/${modelId}/voices`
+        `${host}/v1/voices`
       )
       .method('GET')
       .success((res: any) => {
@@ -154,7 +154,7 @@ export default {
       })
       .networkFail(() => {
         RequestService.reAjaxFun(() => {
-          this.getModelVoices(modelId, callback)
+          this.getModelVoices(callback)
         })
       })
       .send()

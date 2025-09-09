@@ -67,7 +67,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     language: '',
     sort: 0,
     model: {
-      ttsModelId: '',
+      // ttsModelId: '',
       vadModelId: '',
       asrModelId: '',
       llmModelId: '',
@@ -94,8 +94,8 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     { label: '大语言模型(LLM)', key: 'llmModelId' as ModelID, type: 'LLM' as ModelType },
     // { label: '视觉大模型(VLLM)', key: 'vllmModelId' as ModelID, type: 'VLLM'  as ModelType},
     { label: '意图识别(Intent)', key: 'intentModelId' as ModelID, type: 'Intent' as ModelType },
-    { label: '记忆(Memory)', key: 'memModelId' as ModelID, type: 'Memory' as ModelType },
-    { label: '语音合成(TTS)', key: 'ttsModelId' as ModelID, type: 'TTS' as ModelType }
+    { label: '记忆(Memory)', key: 'memModelId' as ModelID, type: 'Memory' as ModelType }
+    // { label: '语音合成(TTS)', key: 'ttsModelId' as ModelID, type: 'TTS' as ModelType }
   ]
 
   // 角色配置模板，通过api获取
@@ -124,6 +124,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     api.agent.getAgentTemplate(res => {
       if (res.code === 0) {
         setTemplate(res.data as AgentTemplate[])
+        console.log('fetchTemplates', res.data)
       }
     })
   }
@@ -171,12 +172,12 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
     })
   }
 
-  const fetchVoiceOptions = (modelId: string) => {
-    if (!modelId) {
-      setVoiceOptions([])
-      return
-    }
-    api.model.getModelVoices(modelId, res => {
+  const fetchVoiceOptions = () => {
+    // if (!modelId) {
+    //   setVoiceOptions([])
+    //   return
+    // }
+    api.model.getModelVoices(res => {
       // console.log('getModelVoices', res)
       if (res.code === 0 && res.data) {
         // todo: qiniu服务器api与开源接口差异 - 返回值结构 qiniu 音色放在res.data.voices中
@@ -207,7 +208,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           ttsVoiceId: res.data.ttsVoiceId || 'a5b85a7ba5b24a9a96e24aa88b500d2f',
           model: {
             // 优先采用原始的config中的数据，为空则优先使用可用模型的第一个
-            ttsModelId: res.data.ttsModelId,  // || modelOptions.TTS?.[0].value || '',
+            // ttsModelId: res.data.ttsModelId,  // || modelOptions.TTS?.[0].value || '',
             vadModelId: res.data.vadModelId,  // || modelOptions.VAD?.[0].value || '',
             asrModelId: res.data.asrModelId,  // || modelOptions.ASR?.[0].value || '',
             llmModelId: res.data.llmModelId,  // || modelOptions.LLM?.[0].value || '',
@@ -263,10 +264,10 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
 
   // 获取音色
   useEffect(() => {
-    if (form.model.ttsModelId) {
-      fetchVoiceOptions(form.model.ttsModelId)
-    }
-  }, [form.model.ttsModelId])
+    // if (form.model.ttsModelId) {
+    fetchVoiceOptions()
+    // }
+  }, [])
 
   // 加载时获取只读的数据
   usePageEvent('onLoad', () => {
@@ -287,15 +288,15 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
 
   const handleModelChange = (modelType: string, value: string) => {
     // 当修改tts模型时，清空音色选项
-    if (modelType === 'ttsModelId') {
-      setForm(prev => ({
-        ...prev,
-        model: {
-          ...prev.model,
-          ttsVoiceId: null
-        }
-      }))
-    }
+    // if (modelType === 'ttsModelId') {
+    //   setForm(prev => ({
+    //     ...prev,
+    //     model: {
+    //       ...prev.model,
+    //       ttsVoiceId: null
+    //     }
+    //   }))
+    // }
 
     setForm(prev => ({
       ...prev,
@@ -318,6 +319,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
   const selectTemplate = (template: AgentTemplate) => {
     if (loadingTemplate) return
     setLoadingTemplate(true)
+    console.log('selectTemplate', template)
 
     try {
       setForm(
@@ -333,7 +335,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
           language: template.language,
           model: {
             ...prev.model,
-            ttsModelId: template.ttsModelId,
+            // ttsModelId: template.ttsModelId,
             vadModelId: template.vadModelId,
             asrModelId: template.asrModelId,
             llmModelId: template.llmModelId,
@@ -387,7 +389,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
       vadModelId: form.model.vadModelId,
       llmModelId: form.model.llmModelId,
       vllmModelId: form.model.vllmModelId,
-      ttsModelId: form.model.ttsModelId,
+      // ttsModelId: form.model.ttsModelId,
       ttsVoiceId: form.ttsVoiceId,
       chatHistoryConf: form.chatHistoryConf,
       memModelId: form.model.memModelId,
@@ -450,7 +452,7 @@ const RoleConfigPage: React.FC<ConfigPageProps> = () => {
             language: '',
             sort: 0,
             model: {
-              ttsModelId: '',
+              // ttsModelId: '',
               vadModelId: '',
               asrModelId: '',
               llmModelId: '',

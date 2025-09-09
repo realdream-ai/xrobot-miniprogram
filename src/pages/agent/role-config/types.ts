@@ -10,7 +10,7 @@ export interface RoleFormData {
   language: string;
   sort: number;
   model: {
-    ttsModelId: string | null;
+    // ttsModelId: string | null;
     vadModelId: string | null;
     asrModelId: string | null;
     llmModelId: string | null;
