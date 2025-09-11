@@ -31,6 +31,16 @@ export default function ManageAgent() {
         showToast({ title: '未授权', icon: 'error', duration: 3000 })
         showToast({ title: '请尝试重新登录', icon: 'error', duration: 3000 })
         // navigateTo({ url: routeMap[Pages.MineAccManage] })
+        setAgents([{
+          agentName: '智能体1',
+          ttsModelName: 'ttsModelName',
+          ttsVoiceName: 'ttsVoiceName',
+          llmModelName: 'llmModelName',
+          vllmModelName: 'vllmModelName',
+          lastConnectedAt: '2025-01-01',
+          deviceCount: 1,
+          id: '1'
+        } as Agent])
       } else if (res.data) {
         setAgents(res.data as Agent[])
         hideLoading()
@@ -147,27 +157,56 @@ export default function ManageAgent() {
       <LoginRequired
         autoRedirect={false}
         noLoginView={
-          <View className="col-container">
-            <View className="alert-text alert-text__bold">未登录</View>
-            <View className="alert-text">请登录后使用</View>
-            <Button
-              className={styles.footerButton}
-              mode="primary"
-              onTap={() => {
-                // 这里需要把 routeMap[Pages.XrobotManageAgent] 删除最前面的'/'
-                const originUrl = routeMap[Pages.XrobotManageAgent].replace(
-                  '/',
-                  ''
-                )
-                navigateTo({
-                  url: `${
-                    routeMap[Pages.XrobotAccountLogin]
-                  }?sourceUrl=${encodeURIComponent(originUrl)}`
-                })
-              }}
-            >
-              登录
-            </Button>
+          <View style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+            <View className="col-container">
+              <View className="alert-text alert-text__bold">未登录</View>
+              <View className="alert-text">请登录后使用</View>
+              <Button
+                className={styles.footerButton}
+                mode="primary"
+                onTap={() => {
+                  // 这里需要把 routeMap[Pages.XrobotManageAgent] 删除最前面的'/'
+                  const originUrl = routeMap[Pages.XrobotManageAgent].replace(
+                    '/',
+                    ''
+                  )
+                  navigateTo({
+                    url: `${routeMap[Pages.XrobotAccountLogin]}?sourceUrl=${encodeURIComponent(originUrl)}`
+                  })
+                }}
+              >
+                登录
+              </Button>
+            </View>
+            <ManageAgentPage
+              agents={[{
+                agentName: '智能体1',
+                ttsModelName: 'ttsModelName',
+                ttsVoiceName: 'ttsVoiceName',
+                llmModelName: 'llmModelName',
+                vllmModelName: 'vllmModelName',
+                lastConnectedAt: '2025-01-01',
+                deviceCount: 1,
+                id: '1'
+              } as Agent]}
+              onConfig={goToRoleConfig}
+              onManage={goToDeviceManage}
+              onDelete={handleDeleteAgent}
+            />
+            <View className={styles.agentPage__footer}>
+              <Button
+                mode="primary"
+                className={styles.footerButton}
+                onTap={() => setCreateDialogVisible(true)}
+              >
+                创建智能体
+              </Button>
+            </View>
+            <CreateAgentDialog
+              open={createDialogVisible}
+              onClose={() => setCreateDialogVisible(false)}
+              onCreate={handleCreateAgent}
+            />
           </View>
         }
       >

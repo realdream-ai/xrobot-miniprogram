@@ -7,6 +7,7 @@ import cls from 'classnames'
 
 import { View, Text, switchTab } from 'remax/one'
 import { usePageEvent } from 'remax/macro'
+import { navigateTo } from 'remax/wechat'
 
 import Scaffold from '@/components/Scaffold'
 import AppBar from '@/components/AppBar'
@@ -64,7 +65,7 @@ function Cells() {
   usePageEvent('onShow', () => {
     if (store.getCookie() === '') {
       showToast({ tip: '未登录', icon: 'warning' })
-      switchTab({ url: routeMap[Pages.XrobotManageAgent] })
+      // switchTab({ url: routeMap[Pages.XrobotManageAgent] })
     }
   })
 
@@ -79,14 +80,35 @@ function Cells() {
   )
 }
 
+function loginCheck() {
+  if (store.getCookie() !== '') {
+    return false
+  }
+  return true
+}
+
 function SignoutBtn() {
   const showToast = useToast()
   const [popupShow, setPopupShow] = useState(false)
+
   return (
     <>
-      <View className={styles.signoutBtn} onTap={() => setPopupShow(true)}>
-        退出登录
+      { loginCheck()
+      ? <View className={styles.signoutBtn}
+          onTap={() => {
+          const originUrl = routeMap[Pages.XrobotManageAgent].replace('/', '')
+          navigateTo({
+            url: `${
+              routeMap[Pages.XrobotAccountLogin]
+            }?sourceUrl=${encodeURIComponent(originUrl)}`
+          })
+        }}
+      >
+        登录
       </View>
+      : <View className={styles.signoutBtn} onTap={() => setPopupShow(true)}>
+        退出登录
+      </View>}
       <Popup className={styles.popupBody} open={popupShow} position="bottom">
         <View
           className={cls(styles.popupBtn, styles.confirm)}

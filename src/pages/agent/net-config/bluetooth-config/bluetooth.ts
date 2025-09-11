@@ -40,9 +40,9 @@ export async function searchBluetoothDevices(): Promise<WechatMiniprogram.BlueTo
 
 // 存储 primary uuid 的变量
 export const bluetoothService = {
-  PRIMARY_SERVICE_UUID: '',
-  SEND_CHARACTERISTIC_UUID: '',
-  RECEIVE_CHARACTERISTIC_UUID: ''
+  PRIMARY_SERVICE_UUID: '0000FFFF-0000-1000-8000-00805F9B34FB',
+  SEND_CHARACTERISTIC_UUID: '0000FF01-0000-1000-8000-00805F9B34FB',
+  RECEIVE_CHARACTERISTIC_UUID: '0000FF02-0000-1000-8000-00805F9B34FB'
 }
 
 // 连接蓝牙设备
@@ -55,22 +55,22 @@ export async function connectBluetoothDevice(deviceId: string) {
     .filter(service => service.isPrimary) // 只处理主服务
     .map(async service => {
       // 存储uuid名，给其他页面使用
-      bluetoothService.PRIMARY_SERVICE_UUID = service.uuid
+      // bluetoothService.PRIMARY_SERVICE_UUID = service.uuid
 
-      const characteristicsRes = await promisify(wx.getBLEDeviceCharacteristics)({
+      await promisify(wx.getBLEDeviceCharacteristics)({
         deviceId,
         serviceId: service.uuid
       })
 
       // 处理每个特性
-      characteristicsRes.characteristics.forEach(characteristic => {
-        if (characteristic.properties.write) {
-          bluetoothService.SEND_CHARACTERISTIC_UUID = characteristic.uuid
-        }
-        if (characteristic.properties.notify) {
-          bluetoothService.RECEIVE_CHARACTERISTIC_UUID = characteristic.uuid
-        }
-      })
+      // characteristicsRes.characteristics.forEach(characteristic => {
+      //   if (characteristic.properties.write) {
+      //     bluetoothService.SEND_CHARACTERISTIC_UUID = characteristic.uuid
+      //   }
+      //   if (characteristic.properties.notify) {
+      //     bluetoothService.RECEIVE_CHARACTERISTIC_UUID = characteristic.uuid
+      //   }
+      // })
     })
 
   // 等待所有特性处理完成
