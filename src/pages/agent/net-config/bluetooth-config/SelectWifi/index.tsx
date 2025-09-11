@@ -8,7 +8,9 @@ import styles from './index.less'
 import { connectBluetoothDevice, bluetoothService } from '../bluetooth'
 
 // 对 WiFi 列表去重，保留信号最强的
-function dedupeWifiList(wifiList: WechatMiniprogram.WifiInfo[]): WechatMiniprogram.WifiInfo[] {
+function dedupeWifiList(
+  wifiList: WechatMiniprogram.WifiInfo[]
+): WechatMiniprogram.WifiInfo[] {
   const wifiMap = new Map<string, WechatMiniprogram.WifiInfo>()
   wifiList.forEach(wifi => {
     const existingWifi = wifiMap.get(wifi.SSID)
@@ -36,16 +38,16 @@ function parseWifiList(data: Uint8Array): WechatMiniprogram.WifiInfo[] {
         // ASCII字符
         chars.push(byte)
         i++
-      } else if (byte < 0xE0 && i + 1 < bytes.length) {
+      } else if (byte < 0xe0 && i + 1 < bytes.length) {
         // 双字节UTF-8
-        chars.push(((byte & 0x1F) << 6) | (bytes[i + 1] & 0x3F))
+        chars.push(((byte & 0x1f) << 6) | (bytes[i + 1] & 0x3f))
         i += 2
-      } else if (byte < 0xF0 && i + 2 < bytes.length) {
+      } else if (byte < 0xf0 && i + 2 < bytes.length) {
         // 三字节UTF-8
         chars.push(
-          ((byte & 0x0F) << 12)
-          | ((bytes[i + 1] & 0x3F) << 6)
-          | (bytes[i + 2] & 0x3F)
+          ((byte & 0x0f) << 12)
+            | ((bytes[i + 1] & 0x3f) << 6)
+            | (bytes[i + 2] & 0x3f)
         )
         i += 3
       } else {
@@ -59,19 +61,21 @@ function parseWifiList(data: Uint8Array): WechatMiniprogram.WifiInfo[] {
   // 从日志数据分析：每个WiFi信息的格式为：
   // [length(总长度 1字节), RSSI(1字节), SSID(length-1字节)]
   while (offset < data.length) {
-    const length = data[offset]     // 总长度
+    const length = data[offset] // 总长度
     const rssi = data[offset + 1] // RSSI值
     const ssidBytes = data.slice(offset + 2, offset + length + 1) // SSID内容
     // 解析SSID
     const ssid = utf8BytesToString(ssidBytes)
 
     // 处理rssi，转成strength
-    let signalStrength = rssi > 127 ? rssi - 256 : rssi  // 补码转负数
+    let signalStrength = rssi > 127 ? rssi - 256 : rssi // 补码转负数
     // RSSI 通常在 -100 到 0 之间，转换为 0-100 的信号强度
-    if (signalStrength > 0) signalStrength = 0  // 限制最大值
-    if (signalStrength < -100) signalStrength = -100  // 限制最小值
+    if (signalStrength > 0) signalStrength = 0 // 限制最大值
+    if (signalStrength < -100) signalStrength = -100 // 限制最小值
     // 将 -100～0 映射到 0～100
-    signalStrength = wx.getDeviceInfo().platform === 'ios' ? ((signalStrength + 100) / 100) : (signalStrength + 100)
+    signalStrength = wx.getDeviceInfo().platform === 'ios'
+        ? (signalStrength + 100) / 100
+        : signalStrength + 100
 
     // 过滤掉空SSID和非法字符
     if (ssid && ssid.trim()) {
@@ -91,8 +95,14 @@ function parseWifiList(data: Uint8Array): WechatMiniprogram.WifiInfo[] {
 }
 
 export default function SelectWifi() {
-  const { isIOS, currentStep, setCurrentStep, selectedDevice,
-    updateSelectedWifi, sequenceControl } = useBluetoothConfigContext()
+  const {
+    isIOS,
+    currentStep,
+    setCurrentStep,
+    selectedDevice,
+    updateSelectedWifi,
+    sequenceControl
+  } = useBluetoothConfigContext()
   const isActive = currentStep === 'select-wifi'
   const [wifiList, setWifiList] = useState<WechatMiniprogram.WifiInfo[]>()
   const [loading, setLoading] = useState(false)
@@ -101,7 +111,7 @@ export default function SelectWifi() {
   const receivedData = useRef<Array<{ sequence: number; data: number[] }>>([])
   const currentPromise = useRef<{
     resolve:(value: WechatMiniprogram.WifiInfo[]) => void;
-    reject: (reason: any) => void
+    reject: (reason: any) => void;
   } | null>(null)
   const currentTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null) // 修改类型
 
@@ -112,7 +122,12 @@ export default function SelectWifi() {
     // 监听数据
     const listener = (res: any) => {
       const value = new Uint8Array(res.value)
-      console.log('收到数据:', Array.from(value).map(b => b.toString(16).padStart(2, '0')).join(' '))
+      console.log(
+        '收到数据:',
+        Array.from(value)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join(' ')
+      )
 
       try {
         const type = value[0]
@@ -121,20 +136,23 @@ export default function SelectWifi() {
         const curDataLen = value[3]
 
         // 处理ACK响应
-        if ((type & 0x03) === 0 && (type >> 2) === 0) {
+        if ((type & 0x03) === 0 && type >> 2 === 0) {
           console.log('收到ACK响应，序列号:', sequence)
           return
         }
 
         // 解析类型
-        const mainType = type & 0x03  // 低2位是主类型
-        const subType = type >> 2     // 高6位是子类型
+        const mainType = type & 0x03 // 低2位是主类型
+        const subType = type >> 2 // 高6位是子类型
 
         // WiFi列表数据包 (0x45 = 数据帧类型1 + 子类型17)
-        if (mainType === 0x01 && subType === 0x11) {  // WiFi列表数据包
+        if (mainType === 0x01 && subType === 0x11) {
+          // WiFi列表数据包
           // 保存数据包
           // 如果是分片帧
-          const data = (frameCtrl & 0x10) ? value.slice(6, 6 + curDataLen) : value.slice(4, 4 + curDataLen)
+          const data = frameCtrl & 0x10
+              ? value.slice(6, 6 + curDataLen)
+              : value.slice(4, 4 + curDataLen)
           receivedData.current.push({
             sequence,
             data: Array.from(data)
@@ -237,7 +255,9 @@ export default function SelectWifi() {
       // 设置超时时间（10秒）
       currentTimeoutId.current = setTimeout(() => {
         if (currentPromise.current) {
-          currentPromise.current.reject(new Error('获取WiFi列表超时，请检查设备连接'))
+          currentPromise.current.reject(
+            new Error('获取WiFi列表超时，请检查设备连接')
+          )
           currentPromise.current = null
           currentTimeoutId.current = null
           // 重置接收缓冲区
@@ -247,9 +267,9 @@ export default function SelectWifi() {
 
       // 帧控制位设置
       const frameControl = 0x00 // bit 0: 不加密（控制帧不加密），不包含校验位
-        | 0x00 // bit 2: 方向从手机到ESP设备（0）
-        | 0x00 // bit 3: 不要求回复ACK
-        | 0x00 // bit 4: 无分片
+          | 0x00 // bit 2: 方向从手机到ESP设备（0）
+          | 0x00 // bit 3: 不要求回复ACK
+          | 0x00 // bit 4: 无分片
 
       const cmd = new Uint8Array([
         (0x09 << 2) | 0x00, // 类型：控制帧(0x0)和子类型(0x9)合并
@@ -263,6 +283,14 @@ export default function SelectWifi() {
         serviceId: bluetoothService.PRIMARY_SERVICE_UUID,
         characteristicId: bluetoothService.SEND_CHARACTERISTIC_UUID,
         value: cmd.buffer,
+        // success: (e) => {
+        //   console.log("获取wifi列表请求成功,", e, "wifi请求携带数据：", {
+        //     deviceId,
+        //     serviceId: bluetoothService.PRIMARY_SERVICE_UUID,
+        //     characteristicId: bluetoothService.SEND_CHARACTERISTIC_UUID,
+        //     value: cmd.buffer,
+        //   });
+        // },
         fail: err => {
           console.log('写入失败:', err)
           // 清除超时定时器
@@ -276,7 +304,8 @@ export default function SelectWifi() {
           }
         }
       })
-    }), [sequenceControl]
+    }),
+    [sequenceControl]
   )
 
   // 监听蓝牙设备发送的WiFi列表
@@ -299,16 +328,18 @@ export default function SelectWifi() {
         showToast({ tip: errorMessage, icon: 'fail', duration: 3000 })
         setLoading(false)
       })
-
   }, [isActive, selectedDevice, showToast, getWifiList])
 
-  const handleSelectWifi = useCallback((wifi: WechatMiniprogram.WifiInfo) => {
-    updateSelectedWifi({
-      SSID: wifi.SSID,
-      signalStrength: wifi.signalStrength
-    })
-    setCurrentStep('input-pwd')
-  }, [updateSelectedWifi, setCurrentStep])
+  const handleSelectWifi = useCallback(
+    (wifi: WechatMiniprogram.WifiInfo) => {
+      updateSelectedWifi({
+        SSID: wifi.SSID,
+        signalStrength: wifi.signalStrength
+      })
+      setCurrentStep('input-pwd')
+    },
+    [updateSelectedWifi, setCurrentStep]
+  )
 
   const handleRefresh = useCallback(() => {
     if (loading || !selectedDevice) return
